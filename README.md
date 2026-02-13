@@ -1,1 +1,0 @@
-# juansegutierrez.github.io
