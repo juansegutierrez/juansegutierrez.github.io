@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juan S. Gutierrez | Digital Portfolio</title>
+    <title>Juan S. Gutierrez | Orbital Command</title>
     <!-- React & Tailwind CDN -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -49,132 +49,615 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        const SYSTEM_DATA = {
-            name: "Juan S. Gutierrez",
-            title: "Data Strategist",
-            id: "JSG-001",
-            status: "ONLINE",
-            tagline: "Converting data into actionable intelligence.",
-            contact: {
-                email: "jgjuandi@gmail.com",
-                linkedin: "https://www.linkedin.com/in/juan-gutierrez-068954328/"
+        /* --- DATA CORE --- */
+        const DATA = {
+            en: {
+                system: {
+                    name: "Juan S. Gutierrez",
+                    title: "Data Strategist",
+                    status: "ONLINE",
+                    tagline: "Converting data into actionable intelligence.",
+                    contact: {
+                        email: "jgjuandi@gmail.com",
+                        linkedin: "https://www.linkedin.com/in/juan-gutierrez-068954328/"
+                    }
+                },
+                nav: ["Command", "Experience", "Projects", "Awards", "Comms"],
+                static: {
+                    statusLabel: "SYSTEM STATUS:",
+                    initiate: "INITIATE PROTOCOLS",
+                    linkedin: "LINKEDIN",
+                    systemLog: "System Log",
+                    profExp: "Professional Experience",
+                    education: "EDUCATION",
+                    leadership: "Leadership Modules",
+                    credentials: "CREDENTIALS",
+                    projectDb: "Project Database",
+                    commendations: "Commendations",
+                    honors: "Honors & Awards",
+                    commsArray: "Comms Array",
+                    transmission: "Transmission Lines Open",
+                    emailLabel: "EMAIL",
+                    linkedinLabel: "LINKEDIN",
+                    degree: "B.S. Political Science",
+                    gpa: "GPA: 3.8",
+                    minors: "Minors: IT, Urban Planning",
+                    si_role: "Co-Founder",
+                    esp_role: "Outreach Coordinator",
+                    idPrefix: "ID_"
+                },
+                skills: [
+                    { name: "Python & R", type: "Scripting", icon: "code" },
+                    { name: "SQL & Data Vault", type: "Database", icon: "database" },
+                    { name: "Tableau & PowerBI", type: "Visualization", icon: "bar-chart" },
+                    { name: "React & HTML5", type: "Frontend", icon: "activity" },
+                    { name: "GIS & Urban Planning", type: "Spatial Analysis", icon: "map" },
+                ],
+                experience: [
+                    {
+                        role: "Data Vault & ERP Modernization Intern",
+                        org: "FSU Information Technology Services",
+                        date: "Nov 2025 - Present",
+                        desc: "Supporting the migration of Human Resources and Financial records to the cloud, documenting business lifecycles and ensuring Data Vault governance.",
+                        skills: ["Data Vault 2.0", "ERP Systems", "SQL", "Compliance Documentation"]
+                    },
+                    {
+                        role: "Data Analytics Intern",
+                        org: "DeVoe L. Moore Center",
+                        date: "Aug 2025 - Present",
+                        desc: "Redeveloped FloridaOpenGov.com. Gathered and cleaned raw data from state agencies to create high-fidelity visualizations.",
+                        skills: ["Tableau", "Data Cleaning", "Python", "Public Data APIs"]
+                    },
+                    {
+                        role: "Public Policy Intern",
+                        org: "DeVoe L. Moore Center",
+                        date: "Aug 2025 - Present",
+                        desc: "Wrote and peer-reviewed market-focused articles. Conducted market-focused qualitative research on urban planning, education, and AI.",
+                        skills: ["Qualitative Research", "Policy Analysis", "Technical Writing", "Urban Planning"]
+                    },
+                    {
+                        role: "Administrative Assistant",
+                        org: "DBS Baby Boomers Adult Day Health & Enrichment Center",
+                        date: "April 2024 - Sep 2025",
+                        desc: "Gained experience in data management, MS Office, and insurance billing. Supported the transition to a new management team and the launch of a new daycare and clinic.",
+                        skills: ["Data Management", "MS Office Suite", "Insurance Billing", "Operations"]
+                    }
+                ],
+                projects: [
+                    {
+                        id: 6,
+                        title: "Digital Portfolio",
+                        role: "Developer",
+                        year: "Spring 2026",
+                        stack: ["React", "Tailwind CSS", "Framer Motion", "UI/UX"],
+                        desc: "A high-performance, sci-fi themed personal portfolio designed to showcase data strategy and urban analysis capabilities using a responsive HUD interface. (This website)",
+                        link: "#", 
+                        status: "Live"
+                    },
+                    {
+                        id: 5,
+                        title: "AI Hallucination in Urban Economics",
+                        role: "Researcher",
+                        year: "Spring 2026",
+                        stack: ["LLM Testing", "Data Analysis", "Urban Economics"],
+                        desc: "Investigated 'Fabricated Citations' in AI models within Urban Economics. Graded literary accuracy for FSU's Undergraduate Research Symposium under Dr. Crystal Taylor.",
+                        link: null,
+                        status: "In Progress"
+                    },
+                    {
+                        id: 4,
+                        title: "Terry Saves the World",
+                        role: "Game Developer",
+                        year: "Spring 2026",
+                        stack: ["HTML5", "JavaScript", "Narrative Design"],
+                        desc: "A comedic, narrative-driven puzzle reimagining Minesweeper. Developed the logic and lore for Terry, an office worker battling an intergalactic threat.",
+                        link: "https://juansegutierrez.github.io/Terry-Saves-the-World/",
+                        status: "Completed"
+                    },
+                    {
+                        id: 3,
+                        title: "FloridaOpenGov",
+                        role: "Web Developer | Data Analyst",
+                        year: "Fall 2025 & Spring 2026",
+                        stack: ["Data Viz", "Public Policy", "Data Cleaning"],
+                        desc: "A complete redevelopment of a portal dedicated to making Florida's government data accessible. My team cleaned chaotic datasets to forge intelligible maps and charts for policy insights.",
+                        link: "https://floridaopengov.com", 
+                        status: "Completed"
+                    },
+                    {
+                        id: 2,
+                        title: "Converting an Abandoned Factory Into a Communal Greenspace",
+                        role: "Urban Planner",
+                        year: "Fall 2025",
+                        stack: ["Urban Policy", "Smart Growth", "Design", "Sustainability"],
+                        desc: "A proposal to convert an abandoned cement factory into a communal greenspace, utilizing smart growth principles to revitalize Tallahassee.",
+                        link: null,
+                        status: "Completed"
+                    },
+                    {
+                        id: 1,
+                        title: "The Influence of Public Opinion on Voter Turnout",
+                        role: "Undergraduate Researcher",
+                        year: "Spring & Summer 2025",
+                        stack: ["Rational Choice Model", "Statistics", "Survey Design"],
+                        desc: "Executed a survey experiment under Dr. Kai Ou. Expanded the Rational Choice Model to examine how oppositional public opinion impacts behavior.",
+                        link: null,
+                        status: "Completed"
+                    }
+                ],
+                awards: [
+                    {
+                        title: "First Place - Data Visualization Contest",
+                        issuer: "Florida State University Libraries",
+                        year: "2026",
+                        icon: "trophy"
+                    },
+                    {
+                        title: "Vires Scholarship",
+                        issuer: "Florida State University",
+                        year: "2022",
+                        icon: "award"
+                    },
+                    {
+                        title: "Florida Academic Scholarship",
+                        issuer: "Bright Futures",
+                        year: "2022",
+                        icon: "award"
+                    }
+                ]
             },
-            skills: [
-                { name: "Python & R", type: "Scripting", icon: "code" },
-                { name: "SQL & Data Vault", type: "Database", icon: "database" },
-                { name: "Tableau & PowerBI", type: "Visualization", icon: "bar-chart" },
-                { name: "React & HTML5", type: "Frontend", icon: "activity" },
-                { name: "GIS & Urban Planning", type: "Spatial Analysis", icon: "map" },
-            ],
-            experience: [
-                {
-                    role: "Data Vault & ERP Modernization Intern",
-                    org: "FSU Information Technology Services",
-                    date: "Nov 2025 - Present",
-                    desc: "Supported the migration of Human Resources and Financial records to the cloud, documenting business lifecycles and ensuring data governance and compliance.",
-                    skills: ["Data Vault", "ERP Systems", "SQL", "Compliance Documentation"]
+            es: {
+                system: {
+                    name: "Juan S. Gutierrez",
+                    title: "Estratega de Datos",
+                    status: "EN LÍNEA",
+                    tagline: "Convirtiendo datos en inteligencia accionable.",
+                    contact: {
+                        email: "jgjuandi@gmail.com",
+                        linkedin: "https://www.linkedin.com/in/juan-gutierrez-068954328/"
+                    }
                 },
-                {
-                    role: "Data Analytics Intern",
-                    org: "DeVoe L. Moore Institute",
-                    date: "Aug 2025 - Present",
-                    desc: "Redeveloped FloridaOpenGov.com and gathered and cleaned raw data from state agencies to create high-fidelity visualizations.",
-                    skills: ["Quantitative Research", "Tableau", "Data Cleaning", "SQL", "Python"]
+                nav: ["Comando", "Experiencia", "Proyectos", "Premios", "Coms"],
+                static: {
+                    statusLabel: "ESTADO DEL SISTEMA:",
+                    initiate: "INICIAR PROTOCOLOS",
+                    linkedin: "LINKEDIN",
+                    systemLog: "Registro del Sistema",
+                    profExp: "Experiencia Profesional",
+                    education: "EDUCACIÓN",
+                    leadership: "Módulos de Liderazgo",
+                    credentials: "CREDENCIALES",
+                    projectDb: "Base de Datos de Proyectos",
+                    commendations: "Reconocimientos",
+                    honors: "Honores y Premios",
+                    commsArray: "Matriz de Comunicación",
+                    transmission: "Líneas de Transmisión Abiertas",
+                    emailLabel: "CORREO",
+                    linkedinLabel: "LINKEDIN",
+                    degree: "Licenciatura en Ciencias Políticas",
+                    gpa: "GPA: 3.8",
+                    minors: "Menciones: TI, Planificación Urbana",
+                    si_role: "Cofundador",
+                    esp_role: "Coordinador de Extensión",
+                    idPrefix: "ID_"
                 },
-                {
-                    role: "Public Policy Intern",
-                    org: "DeVoe L. Moore Institute",
-                    date: "Aug 2025 - Present",
-                    desc: "Wrote and peer-reviewed market-focused articles and onducted market-focused qualitative research on urban planning, education, and AI.",
-                    skills: ["Qualitative Research", "Policy Analysis", "Technical Writing", "Urban Planning"]
-                },
-                {
-                    role: "Administrative Assistant",
-                    org: "DBS Baby Boomers Adult Day Health & Enrichment Center",
-                    date: "April 2024 - Sep 2025",
-                    desc: "Gained experience in data management, MS Office, and insurance billing and supported the transition to a new management team, launching a new daycare and clinic.",
-                    skills: ["Data Management", "MS Office Suite", "Insurance Billing", "Operations"]
-                }
-            ],
-            projects: [
-                {
-                    id: 6,
-                    title: "Digital Portfolio",
-                    role: "Developer",
-                    year: "Spring 2026",
-                    stack: ["React", "Tailwind CSS", "Framer Motion", "UI/UX"],
-                    desc: "Developed a high-performance, sci-fi themed personal portfolio designed to showcase data strategy and urban analysis capabilities using a responsive HUD interface. (This website.)",
-                    link: "#", 
-                    status: "Live"
-                },
-                {
-                    id: 5,
-                    title: "AI Hallucination in Urban Economics: Frabricated Citations",
-                    role: "Researcher",
-                    year: "Spring 2026",
-                    stack: ["Qualitative Research", "Qualitative Research", "LLM Testing", "Data Analysis", "Urban Economics"],
-                    desc: "Investigated 'Fabricated Citations' in AI models within Urban Economics, grading them on literary accuracy under Dr. Crystal Taylor.",
-                    link: null,
-                    status: "In Progress"
-                },
-                {
-                    id: 4,
-                    title: "Terry Saves the World",
-                    role: "Game Developer",
-                    year: "Spring 2026",
-                    stack: ["HTML5", "JavaScript", "Narrative Design"],
-                    desc: "Developed a comedic, narrative-driven puzzle with HTML5 and JavaScript, reimagining the classic Minesweeper game through the eyes of Terry, an office worker tasked with solving an intergalactic threat.",
-                    link: "https://juansegutierrez.github.io/Terry-Saves-the-World/",
-                    status: "Live"
-                },
-                {
-                    id: 3,
-                    title: "FloridaOpenGov.com",
-                    role: "Web Developer | Data Analyst",
-                    year: "Fall 2025 & Spring 2026",
-                    stack: ["Data Viz", "Public Policy", "Data Cleaning"],
-                    desc: "Redeveloped FloridaOpenGov.com, a website dedicated to making Florida's government data accessible. My team cleaned chaotic datasets to forge intelligible maps and charts for policy insights.",
-                    link: "https://floridaopengov.com", 
-                    status: "Live"
-                },
-                {
-                    id: 2,
-                    title: "Converting an Abandoned Factory Into a Communal Greenspace",
-                    role: "Urban Planner",
-                    year: "Fall 2025",
-                    stack: ["Urban Policy", "Smart Growth", "Design", "Sustainability"],
-                    desc: "Researched and drafted a proposal to convert an abandoned cement factory into a communal greenspace, utilizing smart growth principles to revitalize Tallahassee.",
-                    link: null,
-                    status: "Completed"
-                },
-                {
-                    id: 1,
-                    title: "The Influence of Public Opinion on Voter Turnout",
-                    role: "Undergraduate Researcher",
-                    year: "Spring & Summer 2025",
-                    stack: ["Rational Choice Model", "Statistics", "Survey Design"],
-                    desc: "Executed a survey experiment under Dr. Kai Ou. Expanded the Rational Choice Model to examine how oppositional public opinion impacts behavior.",
-                    link: null,
-                    status: "Completed"
-                }
-            ]
+                skills: [
+                    { name: "Python & R", type: "Scripting", icon: "code" },
+                    { name: "SQL & Bóveda de Datos", type: "Base de Datos", icon: "database" },
+                    { name: "Tableau & PowerBI", type: "Visualización", icon: "bar-chart" },
+                    { name: "React & HTML5", type: "Frontend", icon: "activity" },
+                    { name: "GIS & Planificación Urbana", type: "Análisis Espacial", icon: "map" },
+                ],
+                experience: [
+                    {
+                        role: "Pasante de Bóveda de Datos y Modernización ERP",
+                        org: "FSU Information Technology Services",
+                        date: "Nov 2025 - Presente",
+                        desc: "Apoyando la migración de registros de Recursos Humanos y Financieros a la nube, documentando ciclos de vida empresariales y asegurando la gobernanza de la Bóveda de Datos.",
+                        skills: ["Data Vault 2.0", "Sistemas ERP", "SQL", "Documentación de Cumplimiento"]
+                    },
+                    {
+                        role: "Pasante de Análisis de Datos",
+                        org: "DeVoe L. Moore Center",
+                        date: "Ago 2025 - Presente",
+                        desc: "Redesarrollé FloridaOpenGov.com. Recopilé y limpié datos brutos de agencias estatales para crear visualizaciones de alta fidelidad.",
+                        skills: ["Tableau", "Limpieza de Datos", "Python", "APIs de Datos Públicos"]
+                    },
+                    {
+                        role: "Pasante de Política Pública",
+                        org: "DeVoe L. Moore Center",
+                        date: "Ago 2025 - Presente",
+                        desc: "Escribí y revisé artículos enfocados en el mercado. Realicé investigación cualitativa sobre planificación urbana, educación e IA.",
+                        skills: ["Investigación Cualitativa", "Análisis de Políticas", "Escritura Técnica", "Planificación Urbana"]
+                    },
+                    {
+                        role: "Asistente Administrativo",
+                        org: "DBS Baby Boomers Adult Day Health & Enrichment Center",
+                        date: "Abr 2024 - Sep 2025",
+                        desc: "Obtuve experiencia en gestión de datos, MS Office y facturación de seguros. Apoyé la transición a un nuevo equipo administrativo y el lanzamiento de una nueva guardería y clínica.",
+                        skills: ["Gestión de Datos", "MS Office Suite", "Facturación de Seguros", "Operaciones"]
+                    }
+                ],
+                projects: [
+                    {
+                        id: 6,
+                        title: "Portafolio Digital",
+                        role: "Desarrollador",
+                        year: "Primavera 2026",
+                        stack: ["React", "Tailwind CSS", "Framer Motion", "UI/UX"],
+                        desc: "Un portafolio personal de alto rendimiento con temática de ciencia ficción diseñado para mostrar estrategia de datos y capacidades de análisis urbano utilizando una interfaz HUD receptiva. (Este sitio web)",
+                        link: "#", 
+                        status: "En Vivo"
+                    },
+                    {
+                        id: 5,
+                        title: "Alucinaciones de IA en Economía Urbana",
+                        role: "Investigador",
+                        year: "Primavera 2026",
+                        stack: ["Pruebas de LLM", "Análisis de Datos", "Economía Urbana"],
+                        desc: "Investigué 'Citas Fabricadas' en modelos de IA dentro de la Economía Urbana. Califiqué la precisión literaria para el Simposio de Investigación de Pregrado de FSU bajo la Dra. Crystal Taylor.",
+                        link: null,
+                        status: "En Progreso"
+                    },
+                    {
+                        id: 4,
+                        title: "Terry Salva el Mundo",
+                        role: "Desarrollador de Juegos",
+                        year: "Primavera 2026",
+                        stack: ["HTML5", "JavaScript", "Diseño Narrativo"],
+                        desc: "Un rompecabezas narrativo y cómico que reinventa el Buscaminas. Desarrollé la lógica y la historia de Terry, un oficinista que lucha contra una amenaza intergaláctica.",
+                        link: "https://juansegutierrez.github.io/Terry-Saves-the-World/",
+                        status: "Completado"
+                    },
+                    {
+                        id: 3,
+                        title: "FloridaOpenGov",
+                        role: "Desarrollador Web | Analista de Datos",
+                        year: "Otoño 2025 y Primavera 2026",
+                        stack: ["Vis. de Datos", "Política Pública", "Limpieza de Datos"],
+                        desc: "Un rediseño completo de un portal dedicado a hacer accesibles los datos del gobierno de Florida. Mi equipo limpió conjuntos de datos caóticos para forjar mapas y gráficos inteligibles para obtener información sobre políticas.",
+                        link: "https://floridaopengov.com", 
+                        status: "Completado"
+                    },
+                    {
+                        id: 2,
+                        title: "Conversión de Fábrica Abandonada a Espacio Verde",
+                        role: "Planificador Urbano",
+                        year: "Otoño 2025",
+                        stack: ["Política Urbana", "Crecimiento Inteligente", "Diseño", "Sostenibilidad"],
+                        desc: "Una propuesta para convertir una fábrica de cemento abandonada en un espacio verde comunitario, utilizando principios de crecimiento inteligente para revitalizar Tallahassee.",
+                        link: null,
+                        status: "Completado"
+                    },
+                    {
+                        id: 1,
+                        title: "La Influencia de la Opinión Pública en la Participación Electoral",
+                        role: "Investigador de Pregrado",
+                        year: "Primavera y Verano 2025",
+                        stack: ["Modelo de Elección Racional", "Estadísticas", "Diseño de Encuestas"],
+                        desc: "Ejecuté un experimento de encuesta bajo el Dr. Kai Ou. Amplié el Modelo de Elección Racional para examinar cómo la opinión pública opositora impacta el comportamiento.",
+                        link: null,
+                        status: "Completado"
+                    }
+                ],
+                awards: [
+                    {
+                        title: "Primer Lugar - Concurso de Visualización de Datos",
+                        issuer: "Bibliotecas de la Universidad Estatal de Florida",
+                        year: "2026",
+                        icon: "trophy"
+                    },
+                    {
+                        title: "Beca Vires",
+                        issuer: "Universidad Estatal de Florida",
+                        year: "2022",
+                        icon: "award"
+                    },
+                    {
+                        title: "Beca Académica de Florida",
+                        issuer: "Bright Futures",
+                        year: "2022",
+                        icon: "award"
+                    }
+                ]
+            }
         };
 
+        /* --- SUB-COMPONENTS --- */
+
+        const Nav = ({ content, lang, toggleLang, mobileMenuOpen, toggleMobileMenu, closeMobileMenu, scrolled }) => (
+            <nav className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${scrolled ? 'bg-[#0B0E14]/95 border-[#00F0FF]/30 backdrop-blur-md' : 'bg-transparent border-transparent'}`}>
+                <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <i data-lucide="activity" className="text-[#00F0FF]"></i>
+                        <span className="font-orbitron text-white text-xl font-bold tracking-wider">Juanse<span className="text-[#00F0FF]">Gutierrez</span></span>
+                    </div>
+                    
+                    {/* Desktop Menu */}
+                    <div className="hidden md:flex items-center space-x-8">
+                        {content.nav.map((item, index) => (
+                            <a key={item} href={`#${["command", "experience", "projects", "awards", "comms"][index]}`} className="text-[#E0E0E0] hover:text-[#00F0FF] font-rajdhani text-sm font-bold uppercase tracking-widest transition-all">{item}</a>
+                        ))}
+                        <button onClick={toggleLang} className="flex items-center gap-2 text-[#E0E0E0] hover:text-[#00F0FF] transition-colors border border-[#00F0FF]/30 px-3 py-1 rounded hover:bg-[#00F0FF]/10">
+                            <i data-lucide="globe" style={{width: 16, height: 16}}></i>
+                            <span className="font-mono text-xs font-bold">{lang.toUpperCase()}</span>
+                        </button>
+                    </div>
+
+                    {/* Mobile Menu Toggle */}
+                    <div className="md:hidden flex items-center gap-4">
+                        <button onClick={toggleLang} className="text-[#00F0FF] border border-[#00F0FF]/30 px-2 py-1 rounded text-xs font-mono font-bold">
+                            {lang.toUpperCase()}
+                        </button>
+                        <button onClick={toggleMobileMenu} className="text-[#00F0FF] focus:outline-none p-2">
+                            <i data-lucide={mobileMenuOpen ? "x" : "menu"} className="w-8 h-8"></i>
+                        </button>
+                    </div>
+                </div>
+
+                {/* Mobile Menu Dropdown */}
+                {mobileMenuOpen && (
+                    <div className="md:hidden absolute top-20 left-0 w-full bg-[#0B0E14] border-b border-[#00F0FF]/30 p-6 flex flex-col space-y-4 shadow-[0_4px_20px_rgba(0,240,255,0.1)] z-40">
+                        {content.nav.map((item, index) => (
+                            <a 
+                                key={item} 
+                                href={`#${["command", "experience", "projects", "awards", "comms"][index]}`} 
+                                onClick={closeMobileMenu}
+                                className="text-[#E0E0E0] hover:text-[#00F0FF] font-rajdhani text-lg font-bold uppercase tracking-widest transition-all border-l-2 border-transparent hover:border-[#00F0FF] pl-4 py-2"
+                            >
+                                {item}
+                            </a>
+                        ))}
+                    </div>
+                )}
+            </nav>
+        );
+
+        const Hero = ({ content }) => (
+            <section id="command" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+                <div className="absolute inset-0 grid-bg opacity-20 z-0"></div>
+                <div className="animate-scanline"></div>
+                
+                <div className="relative z-10 max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <div className="flex items-center gap-2 mb-4">
+                            <span className="px-2 py-1 bg-[#00F0FF]/10 border border-[#00F0FF] text-[#00F0FF] text-xs font-mono tracking-tighter">{content.static.statusLabel} {content.system.status}</span>
+                            <span className="h-[1px] w-12 bg-[#00F0FF]/50"></span>
+                        </div>
+                        <h1 className="text-4xl sm:text-5xl md:text-7xl font-orbitron font-bold text-white mb-2 tracking-tighter uppercase leading-tight">
+                            Juan S.<br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00F0FF] to-[#0055FF]">Gutierrez</span>
+                        </h1>
+                        <h2 className="text-xl md:text-2xl font-rajdhani text-[#E0E0E0] mb-6 uppercase tracking-widest border-l-4 border-[#00F0FF] pl-4">{content.system.title}</h2>
+                        <p className="text-[#E0E0E0]/70 max-w-lg text-lg mb-8 font-rajdhani leading-relaxed italic">// {content.system.tagline}</p>
+                        <div className="flex flex-wrap gap-4">
+                            <a href="#experience" className="px-8 py-3 bg-[#00F0FF]/10 text-[#00F0FF] font-orbitron font-bold border border-[#00F0FF] hover:bg-[#00F0FF] hover:text-black transition-all clip-corner text-sm md:text-base">{content.static.initiate}</a>
+                            <a href={content.system.contact.linkedin} target="_blank" className="px-8 py-3 bg-transparent text-[#E0E0E0] font-orbitron font-bold border border-[#E0E0E0]/30 hover:border-[#00F0FF] hover:text-[#00F0FF] transition-all clip-corner text-sm md:text-base">{content.static.linkedin}</a>
+                        </div>
+                    </div>
+                    <div className="flex justify-center relative mt-8 md:mt-0">
+                        <div className="absolute inset-0 border border-[#00F0FF]/20 rounded-full animate-spin-slow"></div>
+                        <div className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-[#00F0FF]/50 shadow-[0_0_40px_rgba(0,240,255,0.3)]">
+                            <img src="https://media.licdn.com/dms/image/v2/D4E03AQFBrxhNazYfEg/profile-displayphoto-crop_800_800/B4EZwb1YszKoAI-/0/1769993505887?e=1772668800&v=beta&t=4qYDzbmVTmJvKFY7J7mN3b19Smh7Ed2timW7DgiKzvw" className="w-full h-full object-cover" alt="Profile" />
+                        </div>
+                    </div>
+                </div>
+            </section>
+        );
+
+        const Experience = ({ content }) => (
+            <section id="experience" className="py-24 relative bg-[#0B0E14]">
+                <div className="max-w-6xl mx-auto px-6">
+                    <div className="mb-16">
+                        <h2 className="text-3xl font-orbitron font-bold text-white uppercase tracking-widest">{content.static.systemLog}</h2>
+                        <p className="text-[#00F0FF] font-rajdhani uppercase tracking-widest">{content.static.profExp}</p>
+                    </div>
+                    <div className="grid md:grid-cols-12 gap-12">
+                        <div className="md:col-span-8 space-y-8 border-l border-[#00F0FF]/20 pl-6">
+                            {content.experience.map((job, i) => (
+                                <div key={i} className="bg-[#0F141E] p-6 border border-[#00F0FF]/10 hover:border-[#00F0FF]/50 transition-all clip-corner-sm">
+                                    <div className="flex justify-between items-start mb-2 flex-wrap gap-2">
+                                        <h4 className="text-lg font-bold font-orbitron">{job.role}</h4>
+                                        <span className="text-[#00F0FF] font-mono text-xs bg-[#00F0FF]/5 px-2 py-1 rounded">{job.date}</span>
+                                    </div>
+                                    <p className="text-[#00F0FF]/70 font-rajdhani uppercase text-sm mb-4 font-semibold">{job.org}</p>
+                                    <p className="text-sm leading-relaxed text-[#E0E0E0]/80 mb-4">{job.desc}</p>
+                                    <div className="flex flex-wrap gap-2 pt-4 border-t border-[#00F0FF]/10">
+                                        {job.skills.map(skill => (
+                                            <span key={skill} className="text-[10px] px-2 py-1 bg-[#00F0FF]/5 text-[#00F0FF]/70 font-mono border border-[#00F0FF]/20">{skill}</span>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="md:col-span-4 space-y-8">
+                            {/* Education Box */}
+                            <div className="bg-[#0F141E] p-6 border border-[#00F0FF]/10 clip-corner-sm">
+                                <h4 className="font-orbitron font-bold mb-4 text-[#00F0FF] flex items-center gap-2 uppercase tracking-tighter">
+                                    <i data-lucide="file-text" style={{width:18, height:18}}></i> {content.static.education}
+                                </h4>
+                                <div className="mb-4">
+                                    <p className="font-bold text-white">Florida State University</p>
+                                    <p className="text-sm text-[#E0E0E0]/60">{content.static.degree}</p>
+                                    <div className="mt-2 text-xs font-mono space-y-1">
+                                        <p className="text-[#00F0FF]">{content.static.gpa}</p>
+                                        <p className="text-[#E0E0E0]/40">{content.static.minors}</p>
+                                    </div>
+                                </div>
+                                <div className="pt-4 border-t border-[#00F0FF]/10">
+                                    <p className="text-[10px] text-[#E0E0E0]/40 font-mono mb-2 uppercase tracking-wider">{content.static.leadership}</p>
+                                    <div className="space-y-3">
+                                        <div>
+                                            <p className="text-sm font-bold text-white">Seminole Innovators</p>
+                                            <p className="text-xs text-[#00F0FF]">{content.static.si_role}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-bold text-white">Environmental Service Program</p>
+                                            <p className="text-xs text-[#00F0FF]">{content.static.esp_role}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Certs Box */}
+                            <div className="bg-[#0F141E] p-6 border border-[#00F0FF]/10 clip-corner-sm">
+                                <h4 className="font-orbitron font-bold mb-4 text-[#00F0FF] flex items-center gap-2 uppercase tracking-tighter">
+                                    <i data-lucide="award" style={{width:18, height:18}}></i> {content.static.credentials}
+                                </h4>
+                                <div className="space-y-4">
+                                    <a href="https://www.coursera.org/account/accomplishments/verify/2EGIVRVF9BJ8" target="_blank" className="block group">
+                                        <p className="text-sm font-bold text-white group-hover:text-[#00F0FF] transition-colors flex items-start gap-2">
+                                            Excel Skills for Business <i data-lucide="external-link" style={{width:12, height:12, marginTop:4, opacity:0.5}}></i>
+                                        </p>
+                                        <p className="text-xs text-[#E0E0E0]/60 mt-1">Macquarie University • Dec 2025</p>
+                                    </a>
+                                    <div className="h-[1px] w-full bg-[#00F0FF]/10"></div>
+                                    <a href="https://www.coursera.org/account/accomplishments/specialization/JHQWIY2YZ5RO" target="_blank" className="block group">
+                                        <p className="text-sm font-bold text-white group-hover:text-[#00F0FF] transition-colors flex items-start gap-2">
+                                            Data-Driven Decision Making <i data-lucide="external-link" style={{width:12, height:12, marginTop:4, opacity:0.5}}></i>
+                                        </p>
+                                        <p className="text-xs text-[#E0E0E0]/60 mt-1">Google • Dec 2025</p>
+                                    </a>
+                                </div>
+                            </div>
+
+                            {/* Skills Box */}
+                            <div className="space-y-3">
+                                {content.skills.map((skill, i) => (
+                                    <div key={i} className="flex justify-between items-center p-3 bg-[#0F141E] border-l-2 border-[#00F0FF]/30 text-sm hover:bg-[#00F0FF]/5 transition-colors group">
+                                        <span className="font-bold flex items-center gap-2">
+                                            <i data-lucide={skill.icon} className="text-[#00F0FF] opacity-40 group-hover:opacity-100 transition-opacity" style={{width:14, height:14}}></i>
+                                            {skill.name}
+                                        </span>
+                                        <span className="text-[10px] opacity-40 font-mono uppercase">{skill.type}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        );
+
+        const Projects = ({ content }) => (
+            <section id="projects" className="py-24 border-t border-[#00F0FF]/10">
+                <div className="max-w-7xl mx-auto px-6">
+                    <h2 className="text-3xl font-orbitron font-bold text-white uppercase tracking-widest mb-12 flex items-center gap-3">
+                        {content.static.projectDb}
+                    </h2>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {content.projects.map(proj => (
+                            <div key={proj.id} className="bg-[#0F141E] border border-[#00F0FF]/20 flex flex-col group overflow-hidden hover:border-[#00F0FF]/60 transition-all hover:-translate-y-1">
+                                <div className="bg-[#00F0FF]/10 p-3 border-b border-[#00F0FF]/20 flex justify-between items-center font-mono text-[10px]">
+                                    <span className="text-[#00F0FF]/60">{content.static.idPrefix}{proj.id.toString().padStart(3, '0')}</span>
+                                    <span className={proj.status === 'Completed' || proj.status === 'Live' || proj.status === 'Completado' || proj.status === 'En Vivo' ? 'text-[#00F0FF] font-bold' : 'text-yellow-400 font-bold'}>
+                                        {proj.status.toUpperCase()}
+                                    </span>
+                                </div>
+                                <div className="p-6 flex-grow flex flex-col">
+                                    <h3 className="font-orbitron font-bold text-white mb-2 uppercase text-lg group-hover:text-[#00F0FF] transition-colors">{proj.title}</h3>
+                                    <div className="text-[10px] font-mono text-[#E0E0E0]/40 mb-3">{proj.year}</div>
+                                    <div className="flex flex-wrap gap-2 mb-4">
+                                        {proj.stack.map(s => (
+                                            <span key={s} className="px-1.5 py-0.5 bg-[#0B0E14] text-[10px] font-mono border border-[#00F0FF]/20 text-[#00F0FF]/80">{s}</span>
+                                        ))}
+                                    </div>
+                                    <p className="text-sm opacity-70 mb-6 leading-relaxed flex-grow">{proj.desc}</p>
+                                    {proj.link && (
+                                        <a href={proj.link} target="_blank" className="text-[#00F0FF] font-bold text-xs font-orbitron uppercase tracking-widest flex items-center gap-1 group/link">
+                                            {content.static.initiate} 
+                                            <i data-lucide="external-link" style={{width:12, height:12}} className="group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform"></i>
+                                        </a>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        );
+
+        const Awards = ({ content }) => (
+            <section id="awards" className="py-24 relative bg-[#0B0E14] border-t border-[#00F0FF]/10">
+                <div className="max-w-6xl mx-auto px-6">
+                    <div className="mb-16">
+                        <h2 className="text-3xl font-orbitron font-bold text-white uppercase tracking-widest">{content.static.commendations}</h2>
+                        <p className="text-[#00F0FF] font-rajdhani uppercase tracking-widest">{content.static.honors}</p>
+                    </div>
+                    <div className="grid md:grid-cols-3 gap-6">
+                        {content.awards.map((award, i) => (
+                            <div key={i} className="bg-[#0F141E] p-6 border border-[#00F0FF]/20 flex flex-col items-center text-center hover:border-[#00F0FF]/60 transition-all group relative overflow-hidden clip-corner">
+                                <div className="absolute inset-0 bg-[#00F0FF]/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+                                <div className="relative z-10">
+                                    <div className="w-12 h-12 rounded-full bg-[#00F0FF]/10 flex items-center justify-center mb-4 mx-auto border border-[#00F0FF]/30 group-hover:scale-110 transition-transform">
+                                        <i data-lucide={award.icon} className="text-[#00F0FF]"></i>
+                                    </div>
+                                    <h3 className="font-orbitron font-bold text-white text-lg mb-2">{award.title}</h3>
+                                    <p className="text-[#00F0FF]/70 font-mono text-xs uppercase mb-1">{award.issuer}</p>
+                                    <p className="text-[#E0E0E0]/50 font-rajdhani text-sm">{award.year}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        );
+
+        const Contact = ({ content }) => (
+            <section id="comms" className="py-24 bg-[#080a0f] relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#00F0FF]/30 to-transparent"></div>
+                <div className="max-w-4xl mx-auto px-6 text-center">
+                    <h2 className="text-3xl font-orbitron font-bold text-white uppercase tracking-widest mb-4">{content.static.commsArray}</h2>
+                    <p className="font-rajdhani text-[#00F0FF] mb-12 uppercase tracking-widest">{content.static.transmission}</p>
+                    <div className="flex flex-col items-center justify-center space-y-6">
+                        <div className="p-8 border border-[#00F0FF]/10 bg-[#0F141E]/50 backdrop-blur-sm max-w-2xl w-full text-center clip-corner">
+                            <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 font-mono text-sm md:text-base">
+                                <span className="text-[#E0E0E0] selection:bg-[#00F0FF] selection:text-black hover:text-[#00F0FF] transition-colors cursor-text">
+                                    {content.system.contact.email}
+                                </span>
+                                <span className="hidden md:inline text-[#00F0FF]/30">|</span>
+                                <a 
+                                    href={content.system.contact.linkedin} 
+                                    target="_blank" 
+                                    className="text-[#00F0FF] hover:text-white transition-colors flex items-center gap-2"
+                                >
+                                    {content.static.linkedinLabel} <i data-lucide="external-link" style={{width:14, height:14}}></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        );
+
+        const Footer = () => (
+            <footer className="py-12 text-center opacity-40 font-mono text-[10px] border-t border-[#00F0FF]/10 tracking-[0.2em]">
+                &copy; {new Date().getFullYear()} JUAN S. GUTIERREZ | SYSTEM_CORE_V2.5.0
+            </footer>
+        );
+
+        /* --- MAIN APP --- */
         const App = () => {
             const [scrolled, setScrolled] = useState(false);
             const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+            const [lang, setLang] = useState('en');
+
+            const toggleLang = () => {
+                setLang(prev => prev === 'en' ? 'es' : 'en');
+            };
+
+            const content = DATA[lang];
 
             useEffect(() => {
                 const handleScroll = () => setScrolled(window.scrollY > 50);
                 window.addEventListener('scroll', handleScroll);
-                lucide.createIcons(); // Initialize icons
+                lucide.createIcons();
                 return () => window.removeEventListener('scroll', handleScroll);
             }, []);
 
-            // Re-run createIcons when content updates
             useEffect(() => {
                 lucide.createIcons();
-            });
+            }, [lang, mobileMenuOpen]);
 
             const toggleMobileMenu = () => {
                 setMobileMenuOpen(!mobileMenuOpen);
@@ -186,234 +669,21 @@
 
             return (
                 <div className="min-h-screen bg-[#0B0E14] text-[#E0E0E0] font-sans selection:bg-[#00F0FF] selection:text-black">
-                    
-                    {/* Navigation */}
-                    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${scrolled ? 'bg-[#0B0E14]/95 border-[#00F0FF]/30 backdrop-blur-md' : 'bg-transparent border-transparent'}`}>
-                        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                <i data-lucide="activity" className="text-[#00F0FF]"></i>
-                                <span className="font-orbitron text-white text-xl font-bold tracking-wider">Juanse<span className="text-[#00F0FF]">Gutierrez</span></span>
-                            </div>
-                            
-                            {/* Desktop Menu */}
-                            <div className="hidden md:flex space-x-8">
-                                {["Command", "Experience", "Projects", "Comms"].map(item => (
-                                    <a key={item} href={`#${item.toLowerCase()}`} className="text-[#E0E0E0] hover:text-[#00F0FF] font-rajdhani text-sm font-bold uppercase tracking-widest transition-all">{item}</a>
-                                ))}
-                            </div>
-
-                            {/* Mobile Menu Toggle */}
-                            <div className="md:hidden">
-                                <button onClick={toggleMobileMenu} className="text-[#00F0FF] focus:outline-none p-2">
-                                    <i data-lucide={mobileMenuOpen ? "x" : "menu"} className="w-8 h-8"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Mobile Menu Dropdown */}
-                        {mobileMenuOpen && (
-                            <div className="md:hidden absolute top-20 left-0 w-full bg-[#0B0E14] border-b border-[#00F0FF]/30 p-6 flex flex-col space-y-4 shadow-[0_4px_20px_rgba(0,240,255,0.1)] z-40">
-                                {["Command", "Experience", "Projects", "Comms"].map(item => (
-                                    <a 
-                                        key={item} 
-                                        href={`#${item.toLowerCase()}`} 
-                                        onClick={closeMobileMenu}
-                                        className="text-[#E0E0E0] hover:text-[#00F0FF] font-rajdhani text-lg font-bold uppercase tracking-widest transition-all border-l-2 border-transparent hover:border-[#00F0FF] pl-4 py-2"
-                                    >
-                                        {item}
-                                    </a>
-                                ))}
-                            </div>
-                        )}
-                    </nav>
-
-                    {/* Hero Section */}
-                    <section id="command" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-                        <div className="absolute inset-0 grid-bg opacity-20 z-0"></div>
-                        <div className="animate-scanline"></div>
-                        
-                        <div className="relative z-10 max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
-                            <div>
-                                <div className="flex items-center gap-2 mb-4">
-                                    <span className="px-2 py-1 bg-[#00F0FF]/10 border border-[#00F0FF] text-[#00F0FF] text-xs font-mono tracking-tighter">SYSTEM STATUS: {SYSTEM_DATA.status}</span>
-                                    <span className="h-[1px] w-12 bg-[#00F0FF]/50"></span>
-                                </div>
-                                <h1 className="text-4xl sm:text-5xl md:text-7xl font-orbitron font-bold text-white mb-2 tracking-tighter uppercase leading-tight">
-                                    Juan S.<br />
-                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00F0FF] to-[#0055FF]">Gutierrez</span>
-                                </h1>
-                                <h2 className="text-xl md:text-2xl font-rajdhani text-[#E0E0E0] mb-6 uppercase tracking-widest border-l-4 border-[#00F0FF] pl-4">{SYSTEM_DATA.title}</h2>
-                                <p className="text-[#E0E0E0]/70 max-w-lg text-lg mb-8 font-rajdhani leading-relaxed italic">// {SYSTEM_DATA.tagline}</p>
-                                <div className="flex flex-wrap gap-4">
-                                    <a href="#experience" className="px-8 py-3 bg-[#00F0FF]/10 text-[#00F0FF] font-orbitron font-bold border border-[#00F0FF] hover:bg-[#00F0FF] hover:text-black transition-all clip-corner text-sm md:text-base">INITIATE PROTOCOLS</a>
-                                    <a href={SYSTEM_DATA.contact.linkedin} target="_blank" className="px-8 py-3 bg-transparent text-[#E0E0E0] font-orbitron font-bold border border-[#E0E0E0]/30 hover:border-[#00F0FF] hover:text-[#00F0FF] transition-all clip-corner text-sm md:text-base">LINKEDIN</a>
-                                </div>
-                            </div>
-                            <div className="flex justify-center relative mt-8 md:mt-0">
-                                <div className="absolute inset-0 border border-[#00F0FF]/20 rounded-full animate-spin-slow"></div>
-                                <div className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-[#00F0FF]/50 shadow-[0_0_40px_rgba(0,240,255,0.3)]">
-                                    <img src="https://media.licdn.com/dms/image/v2/D4E03AQFBrxhNazYfEg/profile-displayphoto-crop_800_800/B4EZwb1YszKoAI-/0/1769993505887?e=1772668800&v=beta&t=4qYDzbmVTmJvKFY7J7mN3b19Smh7Ed2timW7DgiKzvw" className="w-full h-full object-cover" alt="Profile" />
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    {/* Experience Section */}
-                    <section id="experience" className="py-24 relative bg-[#0B0E14]">
-                        <div className="max-w-6xl mx-auto px-6">
-                            <div className="mb-16">
-                                <h2 className="text-3xl font-orbitron font-bold text-white uppercase tracking-widest">System Log</h2>
-                                <p className="text-[#00F0FF] font-rajdhani uppercase tracking-widest">Professional Experience</p>
-                            </div>
-                            <div className="grid md:grid-cols-12 gap-12">
-                                <div className="md:col-span-8 space-y-8 border-l border-[#00F0FF]/20 pl-6">
-                                    {SYSTEM_DATA.experience.map((job, i) => (
-                                        <div key={i} className="bg-[#0F141E] p-6 border border-[#00F0FF]/10 hover:border-[#00F0FF]/50 transition-all clip-corner-sm">
-                                            <div className="flex justify-between items-start mb-2 flex-wrap gap-2">
-                                                <h4 className="text-lg font-bold font-orbitron">{job.role}</h4>
-                                                <span className="text-[#00F0FF] font-mono text-xs bg-[#00F0FF]/5 px-2 py-1 rounded">{job.date}</span>
-                                            </div>
-                                            <p className="text-[#00F0FF]/70 font-rajdhani uppercase text-sm mb-4 font-semibold">{job.org}</p>
-                                            <p className="text-sm leading-relaxed text-[#E0E0E0]/80 mb-4">{job.desc}</p>
-                                            <div className="flex flex-wrap gap-2 pt-4 border-t border-[#00F0FF]/10">
-                                                {job.skills.map(skill => (
-                                                    <span key={skill} className="text-[10px] px-2 py-1 bg-[#00F0FF]/5 text-[#00F0FF]/70 font-mono border border-[#00F0FF]/20">{skill}</span>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="md:col-span-4 space-y-8">
-                                    {/* Education Box */}
-                                    <div className="bg-[#0F141E] p-6 border border-[#00F0FF]/10 clip-corner-sm">
-                                        <h4 className="font-orbitron font-bold mb-4 text-[#00F0FF] flex items-center gap-2 uppercase tracking-tighter">
-                                            <i data-lucide="file-text" style={{width:18, height:18}}></i> EDUCATION
-                                        </h4>
-                                        <div className="mb-4">
-                                            <p className="font-bold text-white">Florida State University</p>
-                                            <p className="text-sm text-[#E0E0E0]/60">B.S. Political Science</p>
-                                            <div className="mt-2 text-xs font-mono space-y-1">
-                                                <p className="text-[#00F0FF]">GPA: 3.8</p>
-                                                <p className="text-[#E0E0E0]/40">Minors: IT, Urban Planning</p>
-                                            </div>
-                                        </div>
-                                        <div className="pt-4 border-t border-[#00F0FF]/10">
-                                            <p className="text-[10px] text-[#E0E0E0]/40 font-mono mb-2 uppercase tracking-wider">Leadership Modules</p>
-                                            <div className="space-y-3">
-                                                <div>
-                                                    <p className="text-sm font-bold text-white">Seminole Innovators</p>
-                                                    <p className="text-xs text-[#00F0FF]">Co-Founder</p>
-                                                </div>
-                                                <div>
-                                                    <p className="text-sm font-bold text-white">Environmental Service Program</p>
-                                                    <p className="text-xs text-[#00F0FF]">Outreach Coordinator</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Certs Box */}
-                                    <div className="bg-[#0F141E] p-6 border border-[#00F0FF]/10 clip-corner-sm">
-                                        <h4 className="font-orbitron font-bold mb-4 text-[#00F0FF] flex items-center gap-2 uppercase tracking-tighter">
-                                            <i data-lucide="award" style={{width:18, height:18}}></i> CREDENTIALS
-                                        </h4>
-                                        <div className="space-y-4">
-                                            <a href="https://www.coursera.org/account/accomplishments/verify/2EGIVRVF9BJ8" target="_blank" className="block group">
-                                                <p className="text-sm font-bold text-white group-hover:text-[#00F0FF] transition-colors flex items-start gap-2">
-                                                    Excel Skills for Business <i data-lucide="external-link" style={{width:12, height:12, marginTop:4, opacity:0.5}}></i>
-                                                </p>
-                                                <p className="text-xs text-[#E0E0E0]/60 mt-1">Macquarie University • Dec 2025</p>
-                                            </a>
-                                            <div className="h-[1px] w-full bg-[#00F0FF]/10"></div>
-                                            <a href="https://www.coursera.org/account/accomplishments/specialization/JHQWIY2YZ5RO" target="_blank" className="block group">
-                                                <p className="text-sm font-bold text-white group-hover:text-[#00F0FF] transition-colors flex items-start gap-2">
-                                                    Data-Driven Decision Making <i data-lucide="external-link" style={{width:12, height:12, marginTop:4, opacity:0.5}}></i>
-                                                </p>
-                                                <p className="text-xs text-[#E0E0E0]/60 mt-1">Google • Dec 2025</p>
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    {/* Skills Box */}
-                                    <div className="space-y-3">
-                                        {SYSTEM_DATA.skills.map((skill, i) => (
-                                            <div key={i} className="flex justify-between items-center p-3 bg-[#0F141E] border-l-2 border-[#00F0FF]/30 text-sm hover:bg-[#00F0FF]/5 transition-colors group">
-                                                <span className="font-bold flex items-center gap-2">
-                                                    <i data-lucide={skill.icon} className="text-[#00F0FF] opacity-40 group-hover:opacity-100 transition-opacity" style={{width:14, height:14}}></i>
-                                                    {skill.name}
-                                                </span>
-                                                <span className="text-[10px] opacity-40 font-mono uppercase">{skill.type}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    {/* Projects Section */}
-                    <section id="projects" className="py-24 border-t border-[#00F0FF]/10">
-                        <div className="max-w-7xl mx-auto px-6">
-                            <h2 className="text-3xl font-orbitron font-bold text-white uppercase tracking-widest mb-12 flex items-center gap-3">
-                                Project Database
-                            </h2>
-                            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {SYSTEM_DATA.projects.map(proj => (
-                                    <div key={proj.id} className="bg-[#0F141E] border border-[#00F0FF]/20 flex flex-col group overflow-hidden hover:border-[#00F0FF]/60 transition-all hover:-translate-y-1">
-                                        <div className="bg-[#00F0FF]/10 p-3 border-b border-[#00F0FF]/20 flex justify-between items-center font-mono text-[10px]">
-                                            <span className="text-[#00F0FF]/60">ID_{proj.id.toString().padStart(3, '0')}</span>
-                                            <span className={proj.status === 'Completed' || proj.status === 'Live' ? 'text-[#00F0FF] font-bold' : 'text-yellow-400 font-bold'}>
-                                                {proj.status.toUpperCase()}
-                                            </span>
-                                        </div>
-                                        <div className="p-6 flex-grow flex flex-col">
-                                            <h3 className="font-orbitron font-bold text-white mb-2 uppercase text-lg group-hover:text-[#00F0FF] transition-colors">{proj.title}</h3>
-                                            <div className="text-[10px] font-mono text-[#E0E0E0]/40 mb-3">{proj.year}</div>
-                                            <div className="flex flex-wrap gap-2 mb-4">
-                                                {proj.stack.map(s => (
-                                                    <span key={s} className="px-1.5 py-0.5 bg-[#0B0E14] text-[10px] font-mono border border-[#00F0FF]/20 text-[#00F0FF]/80">{s}</span>
-                                                ))}
-                                            </div>
-                                            <p className="text-sm opacity-70 mb-6 leading-relaxed flex-grow">{proj.desc}</p>
-                                            {proj.link && (
-                                                <a href={proj.link} target="_blank" className="text-[#00F0FF] font-bold text-xs font-orbitron uppercase tracking-widest flex items-center gap-1 group/link">
-                                                    INITIALIZE 
-                                                    <i data-lucide="external-link" style={{width:12, height:12}} className="group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform"></i>
-                                                </a>
-                                            )}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </section>
-
-                    {/* Contact Section */}
-                    <section id="comms" className="py-24 bg-[#080a0f] relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#00F0FF]/30 to-transparent"></div>
-                        <div className="max-w-4xl mx-auto px-6 text-center">
-                            <h2 className="text-3xl font-orbitron font-bold text-white uppercase tracking-widest mb-4">Comms Array</h2>
-                            <p className="font-rajdhani text-[#00F0FF] mb-12 uppercase tracking-widest">Transmission Lines Open</p>
-                            <div className="flex flex-wrap justify-center gap-8">
-                                <a href={`mailto:${SYSTEM_DATA.contact.email}`} className="flex flex-col items-center gap-3 group">
-                                    <div className="p-5 bg-[#0F141E] border border-[#00F0FF]/20 group-hover:border-[#00F0FF] transition-all group-hover:shadow-[0_0_20px_rgba(0,240,255,0.2)]">
-                                        <i data-lucide="mail" className="group-hover:text-[#00F0FF] transition-colors"></i>
-                                    </div>
-                                    <span className="font-mono text-xs opacity-60 group-hover:opacity-100 group-hover:text-[#00F0FF] transition-all">{SYSTEM_DATA.contact.email}</span>
-                                </a>
-                                <a href={SYSTEM_DATA.contact.linkedin} target="_blank" className="flex flex-col items-center gap-3 group">
-                                    <div className="p-5 bg-[#0F141E] border border-[#00F0FF]/20 group-hover:border-[#00F0FF] transition-all group-hover:shadow-[0_0_20px_rgba(0,240,255,0.2)]">
-                                        <i data-lucide="linkedin" className="group-hover:text-[#00F0FF] transition-colors"></i>
-                                    </div>
-                                    <span className="font-mono text-xs opacity-60 group-hover:opacity-100 group-hover:text-[#00F0FF] transition-all">LINKEDIN</span>
-                                </a>
-                            </div>
-                        </div>
-                    </section>
-
-                    <footer className="py-12 text-center opacity-40 font-mono text-[10px] border-t border-[#00F0FF]/10 tracking-[0.2em]">
-                        &copy; {new Date().getFullYear()} JUAN S. GUTIERREZ | SYSTEM_CORE_V2.5.0
-                    </footer>
+                    <Nav 
+                        content={content} 
+                        lang={lang} 
+                        toggleLang={toggleLang} 
+                        mobileMenuOpen={mobileMenuOpen} 
+                        toggleMobileMenu={toggleMobileMenu} 
+                        closeMobileMenu={closeMobileMenu} 
+                        scrolled={scrolled} 
+                    />
+                    <Hero content={content} />
+                    <Experience content={content} />
+                    <Projects content={content} />
+                    <Awards content={content} />
+                    <Contact content={content} />
+                    <Footer />
                 </div>
             );
         };
