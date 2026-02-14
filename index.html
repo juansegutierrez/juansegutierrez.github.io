@@ -144,7 +144,7 @@
                         stack: ["React", "Tailwind CSS", "Framer Motion", "UI/UX"],
                         desc: "Developed a high-performance, sci-fi themed personal portfolio designed to showcase data strategy and urban analysis capabilities using a responsive HUD interface. (This website)",
                         link: "#", 
-                        status: "Live"
+                        status: "Completed"
                     },
                     {
                         id: 5,
@@ -193,7 +193,7 @@
                         year: "Spring & Summer 2025",
                         stack: ["RStudio", "Rational Choice Model", "Statistics", "Survey Design"],
                         desc: "Designed and executed a survey experiment under Dr. Kai Ou expanding the Rational Choice Model of Voting to examine the impact of overwhelming oppositional public opinion on voter participation.",
-                        link: "https://drive.google.com/file/d/1SfYo01ErcUEs17HOORX0pXb0LbD1D392/view?usp=sharing",
+                        link: "https://drive.google.com/file/d/1TpSX5HSZE7kNXFOW435MYlNXQrSn5F7k/view?usp=sharing",
                         status: "Completed"
                     }
                 ],
@@ -303,7 +303,7 @@
                         stack: ["React", "Tailwind CSS", "Framer Motion", "UI/UX"],
                         desc: "Desarrollé  un portafolio personal de alto rendimiento con temática de ciencia ficción diseñado para mostrar estrategia de datos y capacidades de análisis urbano utilizando una interfaz HUD receptiva. (Este sitio web)",
                         link: "#", 
-                        status: "En Vivo"
+                        status: "Completado"
                     },
                     {
                         id: 5,
@@ -352,7 +352,7 @@
                         year: "Primavera y Verano 2025",
                         stack: ["RStudio",  "Estadísticas", "Modelo de Elección Racional", "Diseño de Encuestas"],
                         desc: "Diseñé y ejecuté un experimento de encuesta bajo la dirección del Dr. Kai Ou, ampliando el modelo de elección racional de votación para examinar el impacto de la abrumadora opinión pública opositora en la participación de los votantes.",
-                        link: "https://drive.google.com/file/d/1SfYo01ErcUEs17HOORX0pXb0LbD1D392/view?usp=sharing",
+                        link: "https://drive.google.com/file/d/1TpSX5HSZE7kNXFOW435MYlNXQrSn5F7k/view?usp=sharing",
                         status: "Completado"
                     }
                 ],
@@ -626,7 +626,7 @@
                                 <div key={proj.id} className="bg-[#0F141E] border border-[#00F0FF]/20 flex flex-col group overflow-hidden hover:border-[#00F0FF]/60 transition-all hover:-translate-y-1">
                                     <div className="bg-[#00F0FF]/10 p-3 border-b border-[#00F0FF]/20 flex justify-between items-center font-mono text-[10px]">
                                         <span className="text-[#00F0FF]/60">{content.static.idPrefix}{proj.id.toString().padStart(3, '0')}</span>
-                                        <span className={proj.status === 'Completed' || proj.status === 'Live' || proj.status === 'Completado' || proj.status === 'En Vivo' ? 'text-[#00F0FF] font-bold' : 'text-yellow-400 font-bold'}>
+                                        <span className={proj.status === 'Completed' || proj.status === 'Completado' ? 'text-[#00F0FF] font-bold' : 'text-yellow-400 font-bold'}>
                                             {proj.status.toUpperCase()}
                                         </span>
                                     </div>
