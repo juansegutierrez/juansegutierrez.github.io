@@ -71,7 +71,7 @@
                     profExp: "Professional Experience",
                     education: "EDUCATION",
                     leadership: "Leadership Modules",
-                    credentials: "CREDENTIALS",
+                    certifications: "CERTIFICATIONS",
                     projectDb: "Project Database",
                     commendations: "Commendations",
                     honors: "Honors & Awards",
@@ -98,28 +98,36 @@
                         role: "Data Vault & ERP Modernization Intern",
                         org: "FSU Information Technology Services",
                         date: "Nov 2025 - Present",
-                        desc: "Supporting the migration of Human Resources and Financial records to the cloud, documenting business lifecycles and ensuring Data Vault governance.",
+                        desc: `- Coordinated HR and Financial data integration for FSU’s ERP modernization initiative.
+- Documented business processes and data lifecycles to support Data Vault governance.
+- Tracked data migration progress and coordinated across Enterprise Systems and Data & Analytics teams.
+- Assisted with compliance-focused documentation for retention and auditability.`,
                         skills: ["Data Vault 2.0", "ERP Systems", "SQL", "Compliance Documentation"]
                     },
                     {
                         role: "Data Analytics Intern",
-                        org: "DeVoe L. Moore Center",
+                        org: "DeVoe L. Moore Institute",
                         date: "Aug 2025 - Present",
-                        desc: "Redeveloped FloridaOpenGov.com. Gathered and cleaned raw data from state agencies to create high-fidelity visualizations.",
+                        desc: `- Redeveloped FloridaOpenGov desktop website.
+- Gathered and cleaned data from a variety of local and state agencies.
+- Created Tableau data visualizations for FloridaOpenGov.
+- Conducted market-focused quantitative research for transparency projects.`,
                         skills: ["Tableau", "Data Cleaning", "Python", "Public Data APIs"]
                     },
                     {
                         role: "Public Policy Intern",
-                        org: "DeVoe L. Moore Center",
+                        org: "DeVoe L. Moore Institute",
                         date: "Aug 2025 - Present",
-                        desc: "Wrote and peer-reviewed market-focused articles. Conducted market-focused qualitative research on urban planning, education, and AI.",
+                        desc: `- Wrote and peer-reviewed market-focused articles.
+- Conducted market-focused qualitative research on urban planning, education, and AI.`,
                         skills: ["Qualitative Research", "Policy Analysis", "Technical Writing", "Urban Planning"]
                     },
                     {
                         role: "Administrative Assistant",
                         org: "DBS Baby Boomers Adult Day Health & Enrichment Center",
                         date: "April 2024 - Sep 2025",
-                        desc: "Gained experience in data management, MS Office, and insurance billing. Supported the transition to a new management team and the launch of a new daycare and clinic.",
+                        desc: `- Gained experience in data management, MS Office, and insurance billing.
+- Supported the transition to a new management team and the launch of a new daycare and clinic.`,
                         skills: ["Data Management", "MS Office Suite", "Insurance Billing", "Operations"]
                     }
                 ],
@@ -226,7 +234,7 @@
                     profExp: "Experiencia Profesional",
                     education: "EDUCACIÓN",
                     leadership: "Módulos de Liderazgo",
-                    credentials: "CREDENCIALES",
+                    certificaciones: "CERTIFICACIONES",
                     projectDb: "Base de Datos de Proyectos",
                     commendations: "Reconocimientos",
                     honors: "Honores y Premios",
@@ -461,7 +469,7 @@
                                         <span className="text-[#00F0FF] font-mono text-xs bg-[#00F0FF]/5 px-2 py-1 rounded">{job.date}</span>
                                     </div>
                                     <p className="text-[#00F0FF]/70 font-rajdhani uppercase text-sm mb-4 font-semibold">{job.org}</p>
-                                    <p className="text-sm leading-relaxed text-[#E0E0E0]/80 mb-4">{job.desc}</p>
+                                    <p className="text-sm leading-relaxed text-[#E0E0E0]/80 mb-4 whitespace-pre-line">{job.desc}</p>
                                     <div className="flex flex-wrap gap-2 pt-4 border-t border-[#00F0FF]/10">
                                         {job.skills.map(skill => (
                                             <span key={skill} className="text-[10px] px-2 py-1 bg-[#00F0FF]/5 text-[#00F0FF]/70 font-mono border border-[#00F0FF]/20">{skill}</span>
@@ -505,6 +513,13 @@
                                     <i data-lucide="award" style={{width:18, height:18}}></i> {content.static.credentials}
                                 </h4>
                                 <div className="space-y-4">
+                                    <a href="https://www.coursera.org/account/accomplishments/specialization/ZMEQM8KPSQTD" target="_blank" className="block group">
+                                        <p className="text-sm font-bold text-white group-hover:text-[#00F0FF] transition-colors flex items-start gap-2">
+                                            Google AI Essentials Specialization <i data-lucide="external-link" style={{width:12, height:12, marginTop:4, opacity:0.5}}></i>
+                                        </p>
+                                        <p className="text-xs text-[#E0E0E0]/60 mt-1">Google • Dec 2025</p>
+                                    </a>
+                                    <div className="h-[1px] w-full bg-[#00F0FF]/10"></div>
                                     <a href="https://www.coursera.org/account/accomplishments/verify/2EGIVRVF9BJ8" target="_blank" className="block group">
                                         <p className="text-sm font-bold text-white group-hover:text-[#00F0FF] transition-colors flex items-start gap-2">
                                             Excel Skills for Business <i data-lucide="external-link" style={{width:12, height:12, marginTop:4, opacity:0.5}}></i>
