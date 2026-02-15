@@ -9,6 +9,8 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&family=Share+Tech+Mono&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
@@ -54,7 +56,7 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
+        const { useState, useEffect, useRef } = React;
 
         /* --- DATA CORE --- */
         const DATA = {
@@ -158,7 +160,7 @@ Supported the transition to a new management team and the launch of a new daycar
                         title: "Digital Portfolio",
                         role: "Developer",
                         year: "Spring 2026",
-                        stack: ["React", "Tailwind CSS", "Framer Motion", "UI/UX"],
+                        stack: ["React", "Tailwind CSS", "Three.js", "UI/UX"],
                         desc: "A high-performance, sci-fi themed personal portfolio designed to showcase data strategy and urban analysis capabilities using a responsive HUD interface. (This website)",
                         link: "#", 
                         status: "Completed"
@@ -319,15 +321,13 @@ Supported the transition to a new management team and the launch of a new daycar
                         date: "Abr 2024 - Sep 2025",
                         desc: `Obtuve experiencia en gestión de datos, MS Office y facturación de seguros. Apoyé la transición a un nuevo equipo administrativo y el lanzamiento de una nueva guardería y clínica.`,
                         skills: ["Gestión de Datos", "MS Office Suite", "Facturación de Seguros", "Operaciones"]
-                    }
-                ],
-                projects: [
+                    },
                     {
                         id: 6,
                         title: "Portafolio Digital",
                         role: "Desarrollador",
                         year: "Primavera 2026",
-                        stack: ["React", "Tailwind CSS", "Framer Motion", "UI/UX"],
+                        stack: ["React", "Tailwind CSS", "Three.js", "UI/UX"],
                         desc: "Un portafolio personal de alto rendimiento con temática de ciencia ficción diseñado para mostrar estrategia de datos y capacidades de análisis urbano utilizando una interfaz HUD receptiva. (Este sitio web)",
                         link: "#", 
                         status: "Completado"
@@ -406,6 +406,115 @@ Supported the transition to a new management team and the launch of a new daycar
             }
         };
 
+        /* --- THREE.JS COMPONENT --- */
+        const SciFiBackground = () => {
+            const mountRef = useRef(null);
+
+            useEffect(() => {
+                if (!mountRef.current) return;
+
+                const width = mountRef.current.clientWidth;
+                const height = mountRef.current.clientHeight;
+
+                // Scene setup
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+                camera.position.z = 4;
+
+                const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+                renderer.setSize(width, height);
+                mountRef.current.appendChild(renderer.domElement);
+
+                // Geometry - A complex wireframe structure
+                const geometry = new THREE.IcosahedronGeometry(1.8, 1);
+                const material = new THREE.MeshBasicMaterial({ 
+                    color: 0x00F0FF, 
+                    wireframe: true,
+                    transparent: true,
+                    opacity: 0.15
+                });
+                const sphere = new THREE.Mesh(geometry, material);
+                
+                // Add an inner core
+                const coreGeometry = new THREE.IcosahedronGeometry(1, 0);
+                const coreMaterial = new THREE.MeshBasicMaterial({
+                    color: 0x0055FF,
+                    wireframe: true,
+                    transparent: true,
+                    opacity: 0.3
+                });
+                const core = new THREE.Mesh(coreGeometry, coreMaterial);
+
+                scene.add(sphere);
+                scene.add(core);
+
+                // Particles
+                const particlesGeometry = new THREE.BufferGeometry();
+                const particleCount = 200;
+                const posArray = new Float32Array(particleCount * 3);
+                
+                for(let i = 0; i < particleCount * 3; i++) {
+                    posArray[i] = (Math.random() - 0.5) * 10;
+                }
+                
+                particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+                const particlesMaterial = new THREE.PointsMaterial({
+                    size: 0.02,
+                    color: 0x00F0FF,
+                    transparent: true,
+                    opacity: 0.4
+                });
+                const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+                scene.add(particlesMesh);
+
+                // Animation Loop
+                let animationFrameId;
+                const animate = () => {
+                    animationFrameId = requestAnimationFrame(animate);
+                    
+                    sphere.rotation.x += 0.001;
+                    sphere.rotation.y += 0.002;
+                    
+                    core.rotation.x -= 0.002;
+                    core.rotation.y -= 0.001;
+
+                    particlesMesh.rotation.y += 0.0005;
+
+                    renderer.render(scene, camera);
+                };
+                animate();
+
+                // Handle Resize
+                const handleResize = () => {
+                    if (!mountRef.current) return;
+                    const w = mountRef.current.clientWidth;
+                    const h = mountRef.current.clientHeight;
+                    renderer.setSize(w, h);
+                    camera.aspect = w / h;
+                    camera.updateProjectionMatrix();
+                };
+                window.addEventListener('resize', handleResize);
+
+                // Cleanup
+                return () => {
+                    window.removeEventListener('resize', handleResize);
+                    cancelAnimationFrame(animationFrameId);
+                    if (mountRef.current && renderer.domElement) {
+                        mountRef.current.removeChild(renderer.domElement);
+                    }
+                    geometry.dispose();
+                    material.dispose();
+                    coreGeometry.dispose();
+                    coreMaterial.dispose();
+                    particlesGeometry.dispose();
+                    particlesMaterial.dispose();
+                    renderer.dispose();
+                };
+            }, []);
+
+            return <div ref={mountRef} className="absolute inset-0 z-0 pointer-events-none opacity-60" />;
+        };
+
         /* --- SUB-COMPONENTS --- */
 
         const Nav = ({ content, lang, toggleLang, mobileMenuOpen, toggleMobileMenu, closeMobileMenu, scrolled }) => (
@@ -459,6 +568,10 @@ Supported the transition to a new management team and the launch of a new daycar
         const Hero = ({ content }) => (
             <section id="command" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
                 <div className="absolute inset-0 grid-bg opacity-20 z-0"></div>
+                
+                {/* 3D Background Injection */}
+                <SciFiBackground />
+                
                 <div className="animate-scanline"></div>
                 
                 <div className="relative z-10 max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
@@ -479,7 +592,6 @@ Supported the transition to a new management team and the launch of a new daycar
                         </div>
                     </div>
                     <div className="flex justify-center relative mt-8 md:mt-0">
-                        <div className="absolute inset-0 border border-[#00F0FF]/20 rounded-full animate-spin-slow"></div>
                         <div className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-[#00F0FF]/50 shadow-[0_0_40px_rgba(0,240,255,0.3)]">
                             <img src="https://media.licdn.com/dms/image/v2/D4E03AQFBrxhNazYfEg/profile-displayphoto-crop_800_800/B4EZwb1YszKoAI-/0/1769993505887?e=1772668800&v=beta&t=4qYDzbmVTmJvKFY7J7mN3b19Smh7Ed2timW7DgiKzvw" className="w-full h-full object-cover" alt="Profile" />
                         </div>
