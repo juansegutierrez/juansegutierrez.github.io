@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juan S. Gutierrez | Digital Portfolio</title>
+    <title>Juan S. Gutierrez | Orbital Command</title>
     <!-- React & Tailwind CDN -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -25,6 +25,7 @@
         /* Custom Clip Paths */
         .clip-corner { clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); }
         .clip-corner-sm { clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%); }
+        .clip-talk-bubble { clip-path: polygon(0% 0%, 100% 0%, 100% 75%, 75% 75%, 75% 100%, 50% 75%, 0% 75%); }
 
         /* Animations */
         @keyframes scanline { 0% { top: 0% } 100% { top: 100% } }
@@ -36,6 +37,12 @@
         @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .animate-spin-slow { animation: spin-slow 8s linear infinite; }
         
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+
         .grid-bg {
             background-image: linear-gradient(rgba(0, 240, 255, 0.1) 1px, transparent 1px), 
                               linear-gradient(90deg, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
@@ -59,7 +66,8 @@
                     tagline: "Converting data into actionable intelligence.",
                     contact: {
                         email: "jgjuandi@gmail.com",
-                        linkedin: "www.linkedin.com/in/juan-sebastian-gutierrez",
+                        linkedin: "https://www.linkedin.com/in/juan-gutierrez-068954328/",
+                        // Link Updated per request
                         resume: "https://drive.google.com/file/d/1a0eLfUdCSO0N3XdvZ9aZiuBfxudzxzEM/view?usp=sharing"
                     }
                 },
@@ -73,7 +81,7 @@
                     profExp: "Professional Experience",
                     education: "EDUCATION",
                     leadership: "Leadership Modules",
-                    certifications: "CERTIFICATIONS",
+                    credentials: "CREDENTIALS",
                     projectDb: "Project Database",
                     commendations: "Commendations",
                     honors: "Honors & Awards",
@@ -82,7 +90,7 @@
                     emailLabel: "EMAIL",
                     linkedinLabel: "LINKEDIN",
                     degree: "B.S. Political Science",
-                    gpa: "GPA: 3.8",
+                    gpa: "GPA: 3.8 (Magna Cum Laude)",
                     minors: "Minors: IT, Urban Planning",
                     si_role: "Co-Founder",
                     esp_role: "Outreach Coordinator",
@@ -90,6 +98,16 @@
                     next: "NEXT",
                     prev: "PREV"
                 },
+                // Alien Messages
+                hype: [
+                    "Juanse is the Data Strategist you need!",
+                    "System Integrity: 100% Awesome.",
+                    "Recruit him before the Galactic Republic does!",
+                    "Check out those SQL skills!",
+                    "This portfolio is out of this world!",
+                    "Warning: High levels of competence detected.",
+                    "He turned a factory into a park! Legend."
+                ],
                 skills: [
                     { name: "Python & R", type: "Scripting", icon: "code" },
                     { name: "SQL & Data Vault", type: "Database", icon: "database" },
@@ -102,36 +120,28 @@
                         role: "Data Vault & ERP Modernization Intern",
                         org: "FSU Information Technology Services",
                         date: "Nov 2025 - Present",
-                        desc: `- Coordinated HR and Financial data integration for FSU’s ERP modernization initiative.
-- Documented business processes and data lifecycles to support Data Vault governance.
-- Tracked data migration and coordinated across Enterprise Systems and Data & Analytics teams.
-- Assisted with compliance-focused documentation for retention and auditability.`,
+                        desc: "Supporting the migration of HR and Financial records. Documenting business lifecycles and ensuring Data Vault governance.",
                         skills: ["Data Vault 2.0", "ERP Systems", "SQL", "Compliance Documentation"]
                     },
                     {
                         role: "Data Analytics Intern",
-                        org: "DeVoe L. Moore Institute",
+                        org: "DeVoe L. Moore Center",
                         date: "Aug 2025 - Present",
-                        desc: `- Redeveloped FloridaOpenGov desktop website.
-- Gathered and cleaned data from a variety of local and state agencies.
-- Created Tableau data visualizations for FloridaOpenGov.
-- Conducted market-focused quantitative research for transparency projects.`,
+                        desc: "Redeveloped FloridaOpenGov. Gathered and cleaned raw data from state agencies to create high-fidelity visualizations.",
                         skills: ["Tableau", "Data Cleaning", "Python", "Public Data APIs"]
                     },
                     {
                         role: "Public Policy Intern",
-                        org: "DeVoe L. Moore Institute",
+                        org: "DeVoe L. Moore Center",
                         date: "Aug 2025 - Present",
-                        desc: `- Wrote and peer-reviewed market-focused articles.
-- Conducted market-focused qualitative research on urban planning, education, and AI.`,
-                        skills: ["Qualitative Research", "Policy Analysis", "Technical Writing", "Urban Planning"]
+                        desc: "Wrote and peer-reviewed market-focused articles. Conducted market-focused qualitative research on urban planning, education, and AI.",
+                        skills: ["Qualitative Research", "Policy Analysis", "Technical Writing", "Urban Economics"]
                     },
                     {
                         role: "Administrative Assistant",
                         org: "DBS Baby Boomers Adult Day Health & Enrichment Center",
-                        date: "Apr 2024 - Sep 2025",
-                        desc: `- Gained experience in data management, MS Office, and insurance billing.
-- Supported the transition to a new management team and the launch of a new daycare and clinic.`,
+                        date: "April 2024 - Sep 2025",
+                        desc: "Gained experience in data management, MS Office, and insurance billing. Supported the transition to a new management team and the launch of a new daycare and clinic.",
                         skills: ["Data Management", "MS Office Suite", "Insurance Billing", "Operations"]
                     }
                 ],
@@ -142,9 +152,9 @@
                         role: "Developer",
                         year: "Spring 2026",
                         stack: ["React", "Tailwind CSS", "Framer Motion", "UI/UX"],
-                        desc: "Developed a high-performance, sci-fi themed personal portfolio designed to showcase data strategy and urban analysis capabilities using a responsive HUD interface. (This website)",
+                        desc: "A high-performance, sci-fi themed personal portfolio designed to showcase data strategy and urban analysis capabilities using a responsive HUD interface. (This website)",
                         link: "#", 
-                        status: "Completed"
+                        status: "Live"
                     },
                     {
                         id: 5,
@@ -162,7 +172,7 @@
                         role: "Game Developer",
                         year: "Spring 2026",
                         stack: ["HTML5", "JavaScript", "Narrative Design"],
-                        desc: "Developed a comedic, narrative-driven puzzle with HTML5 and JavaScript, reimagining the classic Minesweeper game through the eyes of Terry, an office worker tasked with solving an intergalactic threat.",
+                        desc: "A comedic, narrative-driven puzzle reimagining Minesweeper. Developed the logic and lore for Terry, an office worker battling an intergalactic threat.",
                         link: "https://juansegutierrez.github.io/Terry-Saves-the-World/",
                         status: "Completed"
                     },
@@ -172,9 +182,9 @@
                         role: "Web Developer | Data Analyst",
                         year: "Fall 2025 & Spring 2026",
                         stack: ["Data Viz", "Public Policy", "Data Cleaning"],
-                        desc: "Completely redeveloped the FloridaOpenGov website, an index dedicated to making Florida's government data accessible. My team cleaned chaotic datasets to forge intelligible maps and charts for policy insights.",
+                        desc: "A complete redevelopment of a portal dedicated to making Florida's government data accessible. We cleaned chaotic datasets to forge intelligible maps and charts.",
                         link: "https://floridaopengov.com", 
-                        status: "In Progress"
+                        status: "Completed"
                     },
                     {
                         id: 2,
@@ -182,8 +192,8 @@
                         role: "Urban Planner",
                         year: "Fall 2025",
                         stack: ["Urban Policy", "Smart Growth", "Design", "Sustainability"],
-                        desc: "Researched and drafted a proposal to convert an abandoned cement factory into a communal greenspace, utilizing smart growth principles to revitalize Tallahassee.",
-                        link: "https://drive.google.com/file/d/1095O8VCSjhKXvtL9g4R1X6fizC1ga-SN/view?usp=sharing",
+                        desc: "A proposal to convert an abandoned cement factory into a communal greenspace, utilizing smart growth principles to revitalize Tallahassee.",
+                        link: null,
                         status: "Completed"
                     },
                     {
@@ -191,9 +201,9 @@
                         title: "The Influence of Public Opinion on Voter Turnout",
                         role: "Undergraduate Researcher",
                         year: "Spring & Summer 2025",
-                        stack: ["RStudio", "Rational Choice Model", "Statistics", "Survey Design"],
-                        desc: "Designed and executed a survey experiment under Dr. Kai Ou expanding the Rational Choice Model of Voting to examine the impact of overwhelming oppositional public opinion on voter participation.",
-                        link: "https://drive.google.com/file/d/1TpSX5HSZE7kNXFOW435MYlNXQrSn5F7k/view?usp=sharing",
+                        stack: ["Rational Choice Model", "Statistics", "Survey Design"],
+                        desc: "Executed a survey experiment under Dr. Kai Ou. Expanded the Rational Choice Model to examine how oppositional public opinion impacts behavior.",
+                        link: null,
                         status: "Completed"
                     }
                 ],
@@ -226,7 +236,7 @@
                     tagline: "Convirtiendo datos en inteligencia accionable.",
                     contact: {
                         email: "jgjuandi@gmail.com",
-                        linkedin: "www.linkedin.com/in/juan-sebastian-gutierrez",
+                        linkedin: "https://www.linkedin.com/in/juan-gutierrez-068954328/",
                         resume: "https://drive.google.com/file/d/1a0eLfUdCSO0N3XdvZ9aZiuBfxudzxzEM/view?usp=sharing"
                     }
                 },
@@ -240,7 +250,7 @@
                     profExp: "Experiencia Profesional",
                     education: "EDUCACIÓN",
                     leadership: "Módulos de Liderazgo",
-                    certifications: "CERTIFICACIONES",
+                    credentials: "CREDENCIALES",
                     projectDb: "Base de Datos de Proyectos",
                     commendations: "Reconocimientos",
                     honors: "Honores y Premios",
@@ -257,6 +267,16 @@
                     next: "SIG",
                     prev: "ANT"
                 },
+                // Spanish Messages
+                hype: [
+                    "¡Juan es el estratega de datos que necesitas!",
+                    "Integridad del sistema: 100% Increíble.",
+                    "¡Reclútalo antes que la NASA!",
+                    "¡Mira esas habilidades de SQL!",
+                    "¡Este portafolio es de otro mundo!",
+                    "Advertencia: Altos niveles de competencia detectados.",
+                    "Convirtió una fábrica en un parque. ¡Leyenda!"
+                ],
                 skills: [
                     { name: "Python & R", type: "Scripting", icon: "code" },
                     { name: "SQL & Bóveda de Datos", type: "Base de Datos", icon: "database" },
@@ -276,7 +296,7 @@
                         role: "Pasante de Análisis de Datos",
                         org: "DeVoe L. Moore Center",
                         date: "Ago 2025 - Presente",
-                        desc: `Rediseñé por completo el sitio web FloridaOpenGov, un índice dedicado a facilitar el acceso a los datos del gobierno de Florida. Mi equipo depuró conjuntos de datos caóticos para generar mapas y gráficos inteligibles que permitan obtener información sobre políticas.`,
+                        desc: "Redesarrollé FloridaOpenGov.com. Recopilé y limpié datos brutos de agencias estatales para crear visualizaciones de alta fidelidad.",
                         skills: ["Tableau", "Limpieza de Datos", "Python", "APIs de Datos Públicos"]
                     },
                     {
@@ -301,9 +321,9 @@
                         role: "Desarrollador",
                         year: "Primavera 2026",
                         stack: ["React", "Tailwind CSS", "Framer Motion", "UI/UX"],
-                        desc: "Desarrollé  un portafolio personal de alto rendimiento con temática de ciencia ficción diseñado para mostrar estrategia de datos y capacidades de análisis urbano utilizando una interfaz HUD receptiva. (Este sitio web)",
+                        desc: "Un portafolio personal de alto rendimiento con temática de ciencia ficción diseñado para mostrar estrategia de datos y capacidades de análisis urbano utilizando una interfaz HUD receptiva. (Este sitio web)",
                         link: "#", 
-                        status: "Completado"
+                        status: "En Vivo"
                     },
                     {
                         id: 5,
@@ -321,7 +341,7 @@
                         role: "Desarrollador de Juegos",
                         year: "Primavera 2026",
                         stack: ["HTML5", "JavaScript", "Diseño Narrativo"],
-                        desc: "Desarrollé un rompecabezas cómico y narrativo con HTML5 y JavaScript, reimaginando el clásico juego Buscaminas a través de los ojos de Terry, un oficinista encargado de resolver una amenaza intergaláctica.",
+                        desc: "Un rompecabezas narrativo y cómico que reinventa el Buscaminas. Desarrollé la lógica y la historia de Terry, un oficinista que lucha contra una amenaza intergaláctica.",
                         link: "https://juansegutierrez.github.io/Terry-Saves-the-World/",
                         status: "Completado"
                     },
@@ -331,9 +351,9 @@
                         role: "Desarrollador Web | Analista de Datos",
                         year: "Otoño 2025 y Primavera 2026",
                         stack: ["Vis. de Datos", "Política Pública", "Limpieza de Datos"],
-                        desc: "Rediseñé por completo el sitio web FloridaOpenGov, un índice dedicado a facilitar el acceso a los datos del gobierno de Florida. Mi equipo depuró conjuntos de datos caóticos para generar mapas y gráficos inteligibles que permitan obtener información sobre políticas.",
+                        desc: "Un rediseño completo de un portal dedicado a hacer accesibles los datos del gobierno de Florida. Mi equipo limpió conjuntos de datos caóticos para forjar mapas y gráficos inteligibles para obtener información sobre políticas.",
                         link: "https://floridaopengov.com", 
-                        status: "EN PROGRESO"
+                        status: "Completado"
                     },
                     {
                         id: 2,
@@ -341,8 +361,8 @@
                         role: "Planificador Urbano",
                         year: "Otoño 2025",
                         stack: ["Política Urbana", "Crecimiento Inteligente", "Diseño", "Sostenibilidad"],
-                        desc: "Investigué y redacté una propuesta para convertir una fábrica de cemento abandonada en un espacio verde comunitario, utilizando principios de crecimiento inteligente para revitalizar Tallahassee.",
-                        link: "https://drive.google.com/file/d/1095O8VCSjhKXvtL9g4R1X6fizC1ga-SN/view?usp=sharing",
+                        desc: "Una propuesta para convertir una fábrica de cemento abandonada en un espacio verde comunitario, utilizando principios de crecimiento inteligente para revitalizar Tallahassee.",
+                        link: null,
                         status: "Completado"
                     },
                     {
@@ -350,9 +370,9 @@
                         title: "La Influencia de la Opinión Pública en la Participación Electoral",
                         role: "Investigador de Pregrado",
                         year: "Primavera y Verano 2025",
-                        stack: ["RStudio",  "Estadísticas", "Modelo de Elección Racional", "Diseño de Encuestas"],
-                        desc: "Diseñé y ejecuté un experimento de encuesta bajo la dirección del Dr. Kai Ou, ampliando el modelo de elección racional de votación para examinar el impacto de la abrumadora opinión pública opositora en la participación de los votantes.",
-                        link: "https://drive.google.com/file/d/1TpSX5HSZE7kNXFOW435MYlNXQrSn5F7k/view?usp=sharing",
+                        stack: ["Modelo de Elección Racional", "Estadísticas", "Diseño de Encuestas"],
+                        desc: "Ejecuté un experimento de encuesta bajo el Dr. Kai Ou. Amplié el Modelo de Elección Racional para examinar cómo la opinión pública opositora impacta el comportamiento.",
+                        link: null,
                         status: "Completado"
                     }
                 ],
@@ -460,6 +480,40 @@
                 </div>
             </section>
         );
+
+        /* --- 8-BIT ALIEN COMPONENT --- */
+        const HypedAlien = ({ messages }) => {
+            const [msgIndex, setMsgIndex] = useState(0);
+            const [showMsg, setShowMsg] = useState(false);
+
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setShowMsg(true);
+                    setTimeout(() => setShowMsg(false), 4000); // Hide after 4s
+                    setTimeout(() => {
+                        setMsgIndex(prev => (prev + 1) % messages.length);
+                    }, 4500); // Change msg after hidden
+                }, 10000); // Every 10s
+
+                return () => clearInterval(interval);
+            }, [messages]);
+
+            return (
+                <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end animate-float hidden md:flex">
+                    {/* Speech Bubble */}
+                    <div className={`mb-2 mr-2 bg-[#00F0FF] text-black p-3 font-mono text-xs font-bold clip-talk-bubble transition-opacity duration-300 ${showMsg ? 'opacity-100' : 'opacity-0'}`} style={{maxWidth: '180px'}}>
+                        {messages[msgIndex]}
+                    </div>
+                    
+                    {/* 8-bit Alien SVG */}
+                    <div className="w-16 h-16 text-[#00F0FF] hover:scale-110 transition-transform cursor-pointer" onClick={() => { setShowMsg(true); setMsgIndex((msgIndex + 1) % messages.length); }}>
+                       <svg viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M6 2h8v2H6V2z M4 4h2v2H4V4z M14 4h2v2h-2V4z M2 6h2v2H2V6z M16 6h2v2h-2V6z M2 8h2v2h2v2h8v-2h2V8h2v4h-2v2h-2v2h-2v-2h-2v2H8v-2H6v-2H4v-2H2V8z M6 8h2v2H6V8z M12 8h2v2h-2V8z" />
+                       </svg>
+                    </div>
+                </div>
+            );
+        };
 
         /* --- PAGINATION CONTROL --- */
         const PaginationControls = ({ currentPage, totalPages, onPageChange, labels }) => {
@@ -779,6 +833,7 @@
                     <Projects content={content} />
                     <Awards content={content} />
                     <Contact content={content} />
+                    <HypedAlien messages={content.hype} />
                     <Footer />
                 </div>
             );
