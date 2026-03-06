@@ -1,734 +1,846 @@
-import React, { useState, useEffect, useRef } from 'react';
-import * as THREE from 'three';
-import { 
-    Activity, Globe, Menu, X, FileText, 
-    Award, ExternalLink, Code, Database, 
-    BarChart, Map as MapIcon, Trophy 
-} from 'lucide-react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Juan S. Gutierrez | Data Strategist</title>
 
-/* --- SYSTEM STYLES --- */
-const styles = `
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&family=Share+Tech+Mono&family=Inter:wght@300;400;600&display=swap');
-    
-    .font-orbitron { font-family: 'Orbitron', sans-serif; }
-    .font-rajdhani { font-family: 'Rajdhani', sans-serif; }
-    .font-mono { font-family: 'Share Tech Mono', monospace; }
-    .font-sans { font-family: 'Inter', sans-serif; }
-    
-    html { scroll-behavior: smooth; }
-    body { background-color: #0B0E14; color: #E0E0E0; margin: 0; }
-    
-    /* Custom Clip Paths */
-    .clip-corner { clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); }
-    .clip-corner-sm { clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%); }
-    .clip-talk-bubble { clip-path: polygon(0% 0%, 100% 0%, 100% 75%, 75% 75%, 75% 100%, 50% 75%, 0% 75%); }
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-    /* Animations */
-    @keyframes scanline { 0% { top: 0% } 100% { top: 100% } }
-    .animate-scanline {
-        position: absolute; left: 0; right: 0; height: 100%;
-        background: linear-gradient(to bottom, transparent, rgba(0, 240, 255, 0.05), transparent);
-        animation: scanline 4s linear infinite; pointer-events: none; z-index: 5;
-    }
-    @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    .animate-spin-slow { animation: spin-slow 8s linear infinite; }
-    
-    @keyframes float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-    }
-    .animate-float { animation: float 3s ease-in-out infinite; }
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&family=Share+Tech+Mono&family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
 
-    .grid-bg {
-        background-image: linear-gradient(rgba(0, 240, 255, 0.1) 1px, transparent 1px), 
-                          linear-gradient(90deg, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
-        background-size: 40px 40px;
-    }
-`;
+    <!-- React & ReactDOM -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
 
-/* --- DATA CORE --- */
-const DATA = {
-    system: {
-        name: "Juan S. Gutierrez",
-        title: "Data Strategist",
-        status: "ONLINE",
-        tagline: "Converting data into actionable intelligence.",
-        contact: {
-            email: "jgjuandi@gmail.com",
-            linkedin: "https://www.linkedin.com/in/juan-gutierrez-068954328/",
-            resume: "https://drive.google.com/file/d/1GU5efVNs8d5_8c_Ha9jgoIBxKvK5qDyN/view?usp=sharing"
+    <!-- Babel (JSX transpiler) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <style>
+        .font-orbitron { font-family: 'Orbitron', sans-serif; }
+        .font-rajdhani { font-family: 'Rajdhani', sans-serif; }
+        .font-mono-custom { font-family: 'Share Tech Mono', monospace; }
+        .font-sans-custom { font-family: 'Inter', sans-serif; }
+
+        html { scroll-behavior: smooth; }
+        body { background-color: #0B0E14; color: #E0E0E0; margin: 0; }
+
+        .clip-corner { clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); }
+        .clip-corner-sm { clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%); }
+        .clip-talk-bubble { clip-path: polygon(0% 0%, 100% 0%, 100% 75%, 75% 75%, 75% 100%, 50% 75%, 0% 75%); }
+
+        @keyframes scanline { 0% { top: 0% } 100% { top: 100% } }
+        .animate-scanline {
+            position: absolute; left: 0; right: 0; height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(0, 240, 255, 0.05), transparent);
+            animation: scanline 4s linear infinite; pointer-events: none; z-index: 5;
         }
-    },
-    nav: ["Command", "Experience", "Projects", "Awards", "Comms"],
-    static: {
-        statusLabel: "SYSTEM STATUS:",
-        initiate: "INITIATE PROTOCOLS",
-        linkedin: "LINKEDIN",
-        resume: "ACCESS RESUME",
-        systemLog: "System Log",
-        profExp: "Professional Experience",
-        education: "EDUCATION",
-        leadership: "Leadership Modules",
-        credentials: "CREDENTIALS",
-        projectDb: "Project Database",
-        commendations: "Commendations",
-        honors: "Honors & Awards",
-        commsArray: "Comms Array",
-        transmission: "Transmission Lines Open",
-        emailLabel: "EMAIL",
-        linkedinLabel: "LINKEDIN",
-        degree: "B.S. Political Science",
-        gpa: "GPA: 3.8 (Magna Cum Laude)",
-        minors: "Minors: IT, Urban Planning",
-        si_role: "Co-Founder",
-        esp_role: "Outreach Coordinator",
-        idPrefix: "ID_",
-        next: "NEXT",
-        prev: "PREV"
-    },
-    hype: [
-        "Juanse is the Data Strategist you need!",
-        "System Integrity: 100% Awesome.",
-        "Recruit him before the Galactic Republic does!",
-        "Check out those amazing projects!",
-        "This portfolio is out of this world!",
-        "Warning: High levels of [companyValue] detected.",
-        "Handsome and competent? Legend."
-    ],
-    skills: [
-        { name: "Python & R", type: "Scripting", icon: "code" },
-        { name: "SQL & Data Vault", type: "Database", icon: "database" },
-        { name: "Tableau & PowerBI", type: "Visualization", icon: "bar-chart" },
-        { name: "React & HTML5", type: "Frontend", icon: "activity" },
-        { name: "GIS & Urban Planning", type: "Spatial Analysis", icon: "map" },
-    ],
-    experience: [
-        {
-            role: "Data Vault & ERP Modernization Intern",
-            org: "FSU Information Technology Services",
-            date: "Nov 2025 - Present",
-            desc: `- Coordinated HR and Financial data integration for FSU’s ERP modernization initiative.\n- Documented business processes and data lifecycles to support Data Vault governance.\n- Tracked data migration and coordinated across Enterprise Systems and Data & Analytics teams.\n- Assisted with compliance-focused documentation for retention and auditability.`,
-            skills: ["Data Vault 2.0", "ERP Systems", "SQL", "Compliance Documentation"]
-        },
-        {
-            role: "Data Analytics Intern",
-            org: "DeVoe L. Moore Institue",
-            date: "Aug 2025 - Present",
-            desc: `- Redeveloped FloridaOpenGov desktop website.\n- Gathered and cleaned data from a variety of local and state agencies.\n- Created Tableau data visualizations for FloridaOpenGov.\n- Conducted market-focused quantitative research for transparency projects.`,
-            skills: ["Quantitative Research", "Data Cleaning", "Tableau", "SQL", "Python"]
-        },
-        {
-            role: "Public Policy Intern",
-            org: "DeVoe L. Moore Institute",
-            date: "Aug 2025 - Present",
-            desc: `- Wrote and peer-reviewed market-focused articles.\n- Conducted market-focused qualitative research on urban planning, education, and AI.`,
-            skills: ["Qualitative Research", "Policy Analysis", "Technical Writing", "Urban Economics"]
-        },
-        {
-            role: "Administrative Assistant",
-            org: "DBS Baby Boomers Adult Day Health & Enrichment Center",
-            date: "Apr 2024 - Sep 2025",
-            desc: `- Gained experience in data management, MS Office, and insurance billing.\n- Supported the transition to a new management team and the launch of a new daycare and clinic.`,
-            skills: ["Data Management", "MS Office Suite", "Insurance Billing", "Operations"]
+        @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .animate-spin-slow { animation: spin-slow 8s linear infinite; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
-    ],
-    projects: [
-        {
-            id: 6,
-            title: "Digital Portfolio",
-            role: "Developer",
-            year: "Spring 2026",
-            stack: ["React", "Tailwind CSS", "Three.js", "UI/UX"],
-            desc: "Developed a high-performance, sci-fi themed personal portfolio designed to showcase data strategy and urban analysis capabilities using a responsive HUD interface. (This website.)",
-            link: "#", 
-            status: "Completed"
-        },
-        {
-            id: 5,
-            title: "AI Hallucinations in Urban Economics",
-            role: "Researcher",
-            year: "Spring 2026",
-            stack: ["LLM Testing", "Data Analysis", "Urban Economics"],
-            desc: "Investigated 'Fabricated Citations' in AI models within Urban Economics. Graded literary accuracy for FSU's Undergraduate Research Symposium under Dr. Crystal Taylor.",
-            link: null,
-            status: "In Progress"
-        },
-        {
-            id: 4,
-            title: "Terry Saves the World",
-            role: "Game Developer",
-            year: "Spring 2026",
-            stack: ["HTML5", "JavaScript", "Narrative Design"],
-            desc: "Developed a comedic, narrative-driven puzzle with HTML5 and JavaScript, reimagining the classic Minesweeper game through the eyes of Terry, an office worker tasked with solving an intergalactic threat.",
-            link: "https://juansegutierrez.github.io/Terry-Saves-the-World/",
-            status: "Completed"
-        },
-        {
-            id: 3,
-            title: "FloridaOpenGov",
-            role: "Web Developer | Data Analyst",
-            year: "Fall 2025 & Spring 2026",
-            stack: ["Data Viz", "Public Policy", "Data Cleaning", "SQL", "Python"],
-            desc: "Redeveloped FloridaOpenGov.com, a portal dedicated to making Florida's government data accessible. My team cleaned chaotic datasets to forge intelligible maps and charts.",
-            link: "https://floridaopengov.com", 
-            status: "Completed"
-        },
-        {
-            id: 2,
-            title: "Converting an Abandoned Factory Into a Communal Greenspace",
-            role: "Urban Planner",
-            year: "Fall 2025",
-            stack: ["Urban Policy", "Smart Growth", "Design", "Sustainability"],
-            desc: "Researched and drafted a proposal to convert an abandoned cement factory into a communal greenspace, utilizing smart growth principles to revitalize Tallahassee.",
-            link: "https://drive.google.com/file/d/1095O8VCSjhKXvtL9g4R1X6fizC1ga-SN/view?usp=sharing",
-            status: "Completed"
-        },
-        {
-            id: 1,
-            title: "The Influence of Public Opinion on Voter Turnout",
-            role: "Undergraduate Researcher",
-            year: "Spring & Summer 2025",
-            stack: ["Rational Choice Model", "Survey Design", "Statistics", "RStudio"],
-            desc: "Designed and executed a survey experiment under Dr. Kai Ou expanding the Rational Choice Model of Voting to examine the impact of overwhelming oppositional public opinion on voter participation.",
-            link: "https://drive.google.com/file/d/1TpSX5HSZE7kNXFOW435MYlNXQrSn5F7k/view?usp=sharing",
-            status: "Completed"
+        .animate-float { animation: float 3s ease-in-out infinite; }
+
+        .grid-bg {
+            background-image: linear-gradient(rgba(0, 240, 255, 0.1) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
         }
-    ],
-    awards: [
-        { title: "First Place - Data Visualization Contest", issuer: "Florida State University Libraries", year: "2026", icon: "trophy" },
-        { title: "Vires Scholarship", issuer: "Florida State University", year: "2022", icon: "award" },
-        { title: "Florida Academic Scholarship", issuer: "Bright Futures", year: "2022", icon: "award" }
-    ]
-};
 
-/* --- REACT LUCIDE ICON WRAPPER --- */
-const ICON_MAP = {
-    'activity': Activity,
-    'globe': Globe,
-    'menu': Menu,
-    'x': X,
-    'file-text': FileText,
-    'award': Award,
-    'external-link': ExternalLink,
-    'code': Code,
-    'database': Database,
-    'bar-chart': BarChart,
-    'map': MapIcon,
-    'trophy': Trophy
-};
+        /* Tailwind arbitrary value overrides */
+        .text-\[10px\] { font-size: 10px; }
+        .text-\[#00F0FF\] { color: #00F0FF; }
+        .border-\[#00F0FF\] { border-color: #00F0FF; }
+        .bg-\[#0B0E14\] { background-color: #0B0E14; }
+        .bg-\[#0F141E\] { background-color: #0F141E; }
+        .bg-\[#080a0f\] { background-color: #080a0f; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
 
-const Icon = ({ name, className = '' }) => {
-    const SelectedIcon = ICON_MAP[name];
-    if (!SelectedIcon) return null;
-    return <SelectedIcon className={className} />;
-};
+    <script type="text/babel" data-presets="react">
+        const { useState, useEffect, useRef } = React;
 
-/* --- THREE.JS COMPONENT --- */
-const SciFiBackground = () => {
-    const mountRef = useRef(null);
+        /* --- Lucide Icon Helper (UMD build) --- */
+        const LucideIcon = ({ name, className = '' }) => {
+            const ref = useRef(null);
+            useEffect(() => {
+                if (ref.current && window.lucide) {
+                    // Replace inner HTML with the SVG from lucide
+                    const iconName = name.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('');
+                    if (window.lucide[iconName]) {
+                        // lucide UMD exposes createIcons; we do manual SVG creation
+                    }
+                }
+            }, [name]);
 
-    useEffect(() => {
-        const container = mountRef.current;
-        if (!container) return;
+            // Build SVG paths manually for the icons we need
+            const ICON_PATHS = {
+                'activity': '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>',
+                'globe': '<circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>',
+                'menu': '<line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>',
+                'x': '<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>',
+                'file-text': '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline>',
+                'award': '<circle cx="12" cy="8" r="6"></circle><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"></path>',
+                'external-link': '<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line>',
+                'code': '<polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline>',
+                'database': '<ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>',
+                'bar-chart': '<line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line>',
+                'map': '<polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line>',
+                'trophy': '<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path>',
+            };
 
-        let width = container.clientWidth || window.innerWidth;
-        let height = container.clientHeight || window.innerHeight;
-
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-        camera.position.z = 4;
-
-        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-        renderer.setSize(width, height);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        container.appendChild(renderer.domElement);
-
-        const geometry = new THREE.IcosahedronGeometry(1.8, 1);
-        const material = new THREE.MeshBasicMaterial({ 
-            color: 0x00F0FF, 
-            wireframe: true,
-            transparent: true,
-            opacity: 0.15
-        });
-        const sphere = new THREE.Mesh(geometry, material);
-        
-        const coreGeometry = new THREE.IcosahedronGeometry(1, 0);
-        const coreMaterial = new THREE.MeshBasicMaterial({
-            color: 0x0055FF,
-            wireframe: true,
-            transparent: true,
-            opacity: 0.3
-        });
-        const core = new THREE.Mesh(coreGeometry, coreMaterial);
-
-        scene.add(sphere);
-        scene.add(core);
-
-        const particlesGeometry = new THREE.BufferGeometry();
-        const particleCount = 200;
-        const posArray = new Float32Array(particleCount * 3);
-        
-        for(let i = 0; i < particleCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 10;
-        }
-        
-        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const particlesMaterial = new THREE.PointsMaterial({
-            size: 0.02,
-            color: 0x00F0FF,
-            transparent: true,
-            opacity: 0.4
-        });
-        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-        scene.add(particlesMesh);
-
-        let animationFrameId;
-        const animate = () => {
-            animationFrameId = requestAnimationFrame(animate);
-            sphere.rotation.x += 0.001;
-            sphere.rotation.y += 0.002;
-            core.rotation.x -= 0.002;
-            core.rotation.y -= 0.001;
-            particlesMesh.rotation.y += 0.0005;
-            renderer.render(scene, camera);
+            const paths = ICON_PATHS[name] || '';
+            return (
+                <svg
+                    className={className}
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    dangerouslySetInnerHTML={{ __html: paths }}
+                />
+            );
         };
-        animate();
 
-        const resizeObserver = new ResizeObserver((entries) => {
-            if (!entries || entries.length === 0) return;
-            const { width, height } = entries[0].contentRect;
-            if (width > 0 && height > 0) {
+        /* --- DATA CORE --- */
+        const DATA = {
+            system: {
+                name: "Juan S. Gutierrez",
+                title: "Data Strategist",
+                status: "ONLINE",
+                tagline: "Converting data into actionable intelligence.",
+                contact: {
+                    email: "jgjuandi@gmail.com",
+                    linkedin: "https://www.linkedin.com/in/juan-gutierrez-068954328/",
+                    resume: "https://drive.google.com/file/d/1GU5efVNs8d5_8c_Ha9jgoIBxKvK5qDyN/view?usp=sharing"
+                }
+            },
+            nav: ["Command", "Experience", "Projects", "Awards", "Comms"],
+            static: {
+                statusLabel: "SYSTEM STATUS:",
+                initiate: "INITIATE PROTOCOLS",
+                linkedin: "LINKEDIN",
+                resume: "ACCESS RESUME",
+                systemLog: "System Log",
+                profExp: "Professional Experience",
+                education: "EDUCATION",
+                leadership: "Leadership Modules",
+                credentials: "CREDENTIALS",
+                projectDb: "Project Database",
+                commendations: "Commendations",
+                honors: "Honors & Awards",
+                commsArray: "Comms Array",
+                transmission: "Transmission Lines Open",
+                emailLabel: "EMAIL",
+                linkedinLabel: "LINKEDIN",
+                degree: "B.S. Political Science",
+                gpa: "GPA: 3.8 (Magna Cum Laude)",
+                minors: "Minors: IT, Urban Planning",
+                si_role: "Co-Founder",
+                esp_role: "Outreach Coordinator",
+                idPrefix: "ID_",
+                next: "NEXT",
+                prev: "PREV"
+            },
+            hype: [
+                "Juanse is the Data Strategist you need!",
+                "System Integrity: 100% Awesome.",
+                "Recruit him before the Galactic Republic does!",
+                "Check out those amazing projects!",
+                "This portfolio is out of this world!",
+                "Warning: High levels of [companyValue] detected.",
+                "Handsome and competent? Legend."
+            ],
+            skills: [
+                { name: "Python & R", type: "Scripting", icon: "code" },
+                { name: "SQL & Data Vault", type: "Database", icon: "database" },
+                { name: "Tableau & PowerBI", type: "Visualization", icon: "bar-chart" },
+                { name: "React & HTML5", type: "Frontend", icon: "activity" },
+                { name: "GIS & Urban Planning", type: "Spatial Analysis", icon: "map" },
+            ],
+            experience: [
+                {
+                    role: "Data Vault & ERP Modernization Intern",
+                    org: "FSU Information Technology Services",
+                    date: "Nov 2025 - Present",
+                    desc: `- Coordinated HR and Financial data integration for FSU's ERP modernization initiative.\n- Documented business processes and data lifecycles to support Data Vault governance.\n- Tracked data migration and coordinated across Enterprise Systems and Data & Analytics teams.\n- Assisted with compliance-focused documentation for retention and auditability.`,
+                    skills: ["Data Vault 2.0", "ERP Systems", "SQL", "Compliance Documentation"]
+                },
+                {
+                    role: "Data Analytics Intern",
+                    org: "DeVoe L. Moore Institue",
+                    date: "Aug 2025 - Present",
+                    desc: `- Redeveloped FloridaOpenGov desktop website.\n- Gathered and cleaned data from a variety of local and state agencies.\n- Created Tableau data visualizations for FloridaOpenGov.\n- Conducted market-focused quantitative research for transparency projects.`,
+                    skills: ["Quantitative Research", "Data Cleaning", "Tableau", "SQL", "Python"]
+                },
+                {
+                    role: "Public Policy Intern",
+                    org: "DeVoe L. Moore Institute",
+                    date: "Aug 2025 - Present",
+                    desc: `- Wrote and peer-reviewed market-focused articles.\n- Conducted market-focused qualitative research on urban planning, education, and AI.`,
+                    skills: ["Qualitative Research", "Policy Analysis", "Technical Writing", "Urban Economics"]
+                },
+                {
+                    role: "Administrative Assistant",
+                    org: "DBS Baby Boomers Adult Day Health & Enrichment Center",
+                    date: "Apr 2024 - Sep 2025",
+                    desc: `- Gained experience in data management, MS Office, and insurance billing.\n- Supported the transition to a new management team and the launch of a new daycare and clinic.`,
+                    skills: ["Data Management", "MS Office Suite", "Insurance Billing", "Operations"]
+                }
+            ],
+            projects: [
+                {
+                    id: 6,
+                    title: "Digital Portfolio",
+                    role: "Developer",
+                    year: "Spring 2026",
+                    stack: ["React", "Tailwind CSS", "Three.js", "UI/UX"],
+                    desc: "Developed a high-performance, sci-fi themed personal portfolio designed to showcase data strategy and urban analysis capabilities using a responsive HUD interface. (This website.)",
+                    link: "#",
+                    status: "Completed"
+                },
+                {
+                    id: 5,
+                    title: "AI Hallucinations in Urban Economics",
+                    role: "Researcher",
+                    year: "Spring 2026",
+                    stack: ["LLM Testing", "Data Analysis", "Urban Economics"],
+                    desc: "Investigated 'Fabricated Citations' in AI models within Urban Economics. Graded literary accuracy for FSU's Undergraduate Research Symposium under Dr. Crystal Taylor.",
+                    link: null,
+                    status: "In Progress"
+                },
+                {
+                    id: 4,
+                    title: "Terry Saves the World",
+                    role: "Game Developer",
+                    year: "Spring 2026",
+                    stack: ["HTML5", "JavaScript", "Narrative Design"],
+                    desc: "Developed a comedic, narrative-driven puzzle with HTML5 and JavaScript, reimagining the classic Minesweeper game through the eyes of Terry, an office worker tasked with solving an intergalactic threat.",
+                    link: "https://juansegutierrez.github.io/Terry-Saves-the-World/",
+                    status: "Completed"
+                },
+                {
+                    id: 3,
+                    title: "FloridaOpenGov",
+                    role: "Web Developer | Data Analyst",
+                    year: "Fall 2025 & Spring 2026",
+                    stack: ["Data Viz", "Public Policy", "Data Cleaning", "SQL", "Python"],
+                    desc: "Redeveloped FloridaOpenGov.com, a portal dedicated to making Florida's government data accessible. My team cleaned chaotic datasets to forge intelligible maps and charts.",
+                    link: "https://floridaopengov.com",
+                    status: "Completed"
+                },
+                {
+                    id: 2,
+                    title: "Converting an Abandoned Factory Into a Communal Greenspace",
+                    role: "Urban Planner",
+                    year: "Fall 2025",
+                    stack: ["Urban Policy", "Smart Growth", "Design", "Sustainability"],
+                    desc: "Researched and drafted a proposal to convert an abandoned cement factory into a communal greenspace, utilizing smart growth principles to revitalize Tallahassee.",
+                    link: "https://drive.google.com/file/d/1095O8VCSjhKXvtL9g4R1X6fizC1ga-SN/view?usp=sharing",
+                    status: "Completed"
+                },
+                {
+                    id: 1,
+                    title: "The Influence of Public Opinion on Voter Turnout",
+                    role: "Undergraduate Researcher",
+                    year: "Spring & Summer 2025",
+                    stack: ["Rational Choice Model", "Survey Design", "Statistics", "RStudio"],
+                    desc: "Designed and executed a survey experiment under Dr. Kai Ou expanding the Rational Choice Model of Voting to examine the impact of overwhelming oppositional public opinion on voter participation.",
+                    link: "https://drive.google.com/file/d/1TpSX5HSZE7kNXFOW435MYlNXQrSn5F7k/view?usp=sharing",
+                    status: "Completed"
+                }
+            ],
+            awards: [
+                { title: "First Place - Data Visualization Contest", issuer: "Florida State University Libraries", year: "2026", icon: "trophy" },
+                { title: "Vires Scholarship", issuer: "Florida State University", year: "2022", icon: "award" },
+                { title: "Florida Academic Scholarship", issuer: "Bright Futures", year: "2022", icon: "award" }
+            ]
+        };
+
+        /* --- THREE.JS COMPONENT --- */
+        const SciFiBackground = () => {
+            const mountRef = useRef(null);
+
+            useEffect(() => {
+                const container = mountRef.current;
+                if (!container) return;
+
+                let width = container.clientWidth || window.innerWidth;
+                let height = container.clientHeight || window.innerHeight;
+
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+                camera.position.z = 4;
+
+                const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
                 renderer.setSize(width, height);
-                camera.aspect = width / height;
-                camera.updateProjectionMatrix();
-            }
-        });
-        resizeObserver.observe(container);
+                renderer.setPixelRatio(window.devicePixelRatio);
+                container.appendChild(renderer.domElement);
 
-        return () => {
-            resizeObserver.disconnect();
-            cancelAnimationFrame(animationFrameId);
-            if (container && renderer.domElement.parentNode) {
-                container.removeChild(renderer.domElement);
-            }
-            geometry.dispose();
-            material.dispose();
-            coreGeometry.dispose();
-            coreMaterial.dispose();
-            particlesGeometry.dispose();
-            particlesMaterial.dispose();
-            renderer.dispose();
+                const geometry = new THREE.IcosahedronGeometry(1.8, 1);
+                const material = new THREE.MeshBasicMaterial({
+                    color: 0x00F0FF,
+                    wireframe: true,
+                    transparent: true,
+                    opacity: 0.15
+                });
+                const sphere = new THREE.Mesh(geometry, material);
+
+                const coreGeometry = new THREE.IcosahedronGeometry(1, 0);
+                const coreMaterial = new THREE.MeshBasicMaterial({
+                    color: 0x0055FF,
+                    wireframe: true,
+                    transparent: true,
+                    opacity: 0.3
+                });
+                const core = new THREE.Mesh(coreGeometry, coreMaterial);
+
+                scene.add(sphere);
+                scene.add(core);
+
+                const particlesGeometry = new THREE.BufferGeometry();
+                const particleCount = 200;
+                const posArray = new Float32Array(particleCount * 3);
+                for (let i = 0; i < particleCount * 3; i++) {
+                    posArray[i] = (Math.random() - 0.5) * 10;
+                }
+                particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+                const particlesMaterial = new THREE.PointsMaterial({
+                    size: 0.02,
+                    color: 0x00F0FF,
+                    transparent: true,
+                    opacity: 0.4
+                });
+                const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+                scene.add(particlesMesh);
+
+                let animationFrameId;
+                const animate = () => {
+                    animationFrameId = requestAnimationFrame(animate);
+                    sphere.rotation.x += 0.001;
+                    sphere.rotation.y += 0.002;
+                    core.rotation.x -= 0.002;
+                    core.rotation.y -= 0.001;
+                    particlesMesh.rotation.y += 0.0005;
+                    renderer.render(scene, camera);
+                };
+                animate();
+
+                const resizeObserver = new ResizeObserver((entries) => {
+                    if (!entries || entries.length === 0) return;
+                    const { width, height } = entries[0].contentRect;
+                    if (width > 0 && height > 0) {
+                        renderer.setSize(width, height);
+                        camera.aspect = width / height;
+                        camera.updateProjectionMatrix();
+                    }
+                });
+                resizeObserver.observe(container);
+
+                return () => {
+                    resizeObserver.disconnect();
+                    cancelAnimationFrame(animationFrameId);
+                    if (container && renderer.domElement.parentNode) {
+                        container.removeChild(renderer.domElement);
+                    }
+                    geometry.dispose();
+                    material.dispose();
+                    coreGeometry.dispose();
+                    coreMaterial.dispose();
+                    particlesGeometry.dispose();
+                    particlesMaterial.dispose();
+                    renderer.dispose();
+                };
+            }, []);
+
+            return <div ref={mountRef} className="absolute inset-0 w-full h-full z-0 pointer-events-none opacity-60" />;
         };
-    }, []);
 
-    return <div ref={mountRef} className="absolute inset-0 w-full h-full z-0 pointer-events-none opacity-60" />;
-};
+        /* --- SUB-COMPONENTS --- */
+        const Nav = ({ content, mobileMenuOpen, toggleMobileMenu, closeMobileMenu, scrolled }) => (
+            <nav className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${scrolled ? 'bg-opacity-95 border-opacity-30 backdrop-blur-md' : 'border-transparent'}`}
+                 style={{ backgroundColor: scrolled ? 'rgba(11,14,20,0.95)' : 'transparent', borderColor: scrolled ? 'rgba(0,240,255,0.3)' : 'transparent' }}>
+                <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <LucideIcon name="activity" className="w-6 h-6" style={{ color: '#00F0FF' }} />
+                        <span className="font-orbitron text-white text-xl font-bold tracking-wider">
+                            Juanse<span style={{ color: '#00F0FF' }}>Gutierrez</span>
+                        </span>
+                    </div>
 
-/* --- SUB-COMPONENTS --- */
-const Nav = ({ content, mobileMenuOpen, toggleMobileMenu, closeMobileMenu, scrolled }) => (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${scrolled ? 'bg-[#0B0E14]/95 border-[#00F0FF]/30 backdrop-blur-md' : 'bg-transparent border-transparent'}`}>
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-                <Icon name="activity" className="text-[#00F0FF] w-6 h-6" />
-                <span className="font-orbitron text-white text-xl font-bold tracking-wider">Juanse<span className="text-[#00F0FF]">Gutierrez</span></span>
-            </div>
-            
-            <div className="hidden md:flex items-center space-x-8">
-                {content.nav.map((item, index) => (
-                    <a key={item} href={`#${["command", "experience", "projects", "awards", "comms"][index]}`} className="text-[#E0E0E0] hover:text-[#00F0FF] font-rajdhani text-sm font-bold uppercase tracking-widest transition-all">{item}</a>
-                ))}
-            </div>
+                    <div className="hidden md:flex items-center space-x-8">
+                        {content.nav.map((item, index) => (
+                            <a key={item}
+                               href={`#${["command", "experience", "projects", "awards", "comms"][index]}`}
+                               className="font-rajdhani text-sm font-bold uppercase tracking-widest transition-all"
+                               style={{ color: '#E0E0E0' }}
+                               onMouseEnter={e => e.target.style.color = '#00F0FF'}
+                               onMouseLeave={e => e.target.style.color = '#E0E0E0'}
+                            >{item}</a>
+                        ))}
+                    </div>
 
-            <div className="md:hidden flex items-center gap-4">
-                <button onClick={toggleMobileMenu} className="text-[#00F0FF] focus:outline-none p-2">
-                    <Icon name={mobileMenuOpen ? "x" : "menu"} className="w-8 h-8" />
-                </button>
-            </div>
-        </div>
-
-        {mobileMenuOpen && (
-            <div className="md:hidden absolute top-20 left-0 w-full bg-[#0B0E14] border-b border-[#00F0FF]/30 p-6 flex flex-col space-y-4 shadow-[0_4px_20px_rgba(0,240,255,0.1)] z-40">
-                {content.nav.map((item, index) => (
-                    <a 
-                        key={item} 
-                        href={`#${["command", "experience", "projects", "awards", "comms"][index]}`} 
-                        onClick={closeMobileMenu}
-                        className="text-[#E0E0E0] hover:text-[#00F0FF] font-rajdhani text-lg font-bold uppercase tracking-widest transition-all border-l-2 border-transparent hover:border-[#00F0FF] pl-4 py-2"
-                    >
-                        {item}
-                    </a>
-                ))}
-            </div>
-        )}
-    </nav>
-);
-
-const Hero = ({ content }) => (
-    <section id="command" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-        <div className="absolute inset-0 grid-bg opacity-20 z-0"></div>
-        <SciFiBackground />
-        <div className="animate-scanline"></div>
-        
-        <div className="relative z-10 max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
-            <div>
-                <div className="flex items-center gap-2 mb-4">
-                    <span className="px-2 py-1 bg-[#00F0FF]/10 border border-[#00F0FF] text-[#00F0FF] text-xs font-mono tracking-tighter">{content.static.statusLabel} {content.system.status}</span>
-                    <span className="h-[1px] w-12 bg-[#00F0FF]/50"></span>
+                    <div className="md:hidden flex items-center gap-4">
+                        <button onClick={toggleMobileMenu} className="focus:outline-none p-2" style={{ color: '#00F0FF' }}>
+                            <LucideIcon name={mobileMenuOpen ? "x" : "menu"} className="w-8 h-8" />
+                        </button>
+                    </div>
                 </div>
-                <h1 className="text-4xl sm:text-5xl md:text-7xl font-orbitron font-bold text-white mb-2 tracking-tighter uppercase leading-tight">
-                    Juan S.<br />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00F0FF] to-[#0055FF]">Gutierrez</span>
-                </h1>
-                <h2 className="text-xl md:text-2xl font-rajdhani text-[#E0E0E0] mb-6 uppercase tracking-widest border-l-4 border-[#00F0FF] pl-4">{content.system.title}</h2>
-                <p className="text-[#E0E0E0]/70 max-w-lg text-lg mb-8 font-rajdhani leading-relaxed italic">// {content.system.tagline}</p>
-                <div className="flex flex-wrap gap-4">
-                    <a href="#experience" className="px-8 py-3 bg-[#00F0FF]/10 text-[#00F0FF] font-orbitron font-bold border border-[#00F0FF] hover:bg-[#00F0FF] hover:text-black transition-all clip-corner text-sm md:text-base">{content.static.initiate}</a>
-                    <a href={content.system.contact.resume} target="_blank" rel="noreferrer" className="px-8 py-3 bg-transparent text-[#E0E0E0] font-orbitron font-bold border border-[#E0E0E0]/30 hover:border-[#00F0FF] hover:text-[#00F0FF] transition-all clip-corner text-sm md:text-base">{content.static.resume}</a>
+
+                {mobileMenuOpen && (
+                    <div className="md:hidden absolute top-20 left-0 w-full p-6 flex flex-col space-y-4 z-40"
+                         style={{ backgroundColor: '#0B0E14', borderBottom: '1px solid rgba(0,240,255,0.3)', boxShadow: '0 4px 20px rgba(0,240,255,0.1)' }}>
+                        {content.nav.map((item, index) => (
+                            <a key={item}
+                               href={`#${["command", "experience", "projects", "awards", "comms"][index]}`}
+                               onClick={closeMobileMenu}
+                               className="font-rajdhani text-lg font-bold uppercase tracking-widest transition-all pl-4 py-2"
+                               style={{ color: '#E0E0E0', borderLeft: '2px solid transparent' }}
+                               onMouseEnter={e => { e.target.style.color = '#00F0FF'; e.target.style.borderLeftColor = '#00F0FF'; }}
+                               onMouseLeave={e => { e.target.style.color = '#E0E0E0'; e.target.style.borderLeftColor = 'transparent'; }}
+                            >{item}</a>
+                        ))}
+                    </div>
+                )}
+            </nav>
+        );
+
+        const Hero = ({ content }) => (
+            <section id="command" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+                <div className="absolute inset-0 grid-bg opacity-20 z-0"></div>
+                <SciFiBackground />
+                <div className="animate-scanline"></div>
+
+                <div className="relative z-10 max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <div className="flex items-center gap-2 mb-4">
+                            <span className="px-2 py-1 text-xs font-mono-custom tracking-tighter"
+                                  style={{ backgroundColor: 'rgba(0,240,255,0.1)', border: '1px solid #00F0FF', color: '#00F0FF' }}>
+                                {content.static.statusLabel} {content.system.status}
+                            </span>
+                            <span className="h-px w-12" style={{ backgroundColor: 'rgba(0,240,255,0.5)' }}></span>
+                        </div>
+                        <h1 className="text-4xl sm:text-5xl md:text-7xl font-orbitron font-bold text-white mb-2 tracking-tighter uppercase leading-tight">
+                            Juan S.<br />
+                            <span style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundImage: 'linear-gradient(to right, #00F0FF, #0055FF)', backgroundClip: 'text' }}>
+                                Gutierrez
+                            </span>
+                        </h1>
+                        <h2 className="text-xl md:text-2xl font-rajdhani mb-6 uppercase tracking-widest pl-4"
+                            style={{ color: '#E0E0E0', borderLeft: '4px solid #00F0FF' }}>
+                            {content.system.title}
+                        </h2>
+                        <p className="max-w-lg text-lg mb-8 font-rajdhani leading-relaxed italic"
+                           style={{ color: 'rgba(224,224,224,0.7)' }}>
+                            // {content.system.tagline}
+                        </p>
+                        <div className="flex flex-wrap gap-4">
+                            <a href="#experience"
+                               className="px-8 py-3 font-orbitron font-bold clip-corner text-sm md:text-base transition-all"
+                               style={{ backgroundColor: 'rgba(0,240,255,0.1)', color: '#00F0FF', border: '1px solid #00F0FF' }}
+                               onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#00F0FF'; e.currentTarget.style.color = '#000'; }}
+                               onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'rgba(0,240,255,0.1)'; e.currentTarget.style.color = '#00F0FF'; }}>
+                                {content.static.initiate}
+                            </a>
+                            <a href={content.system.contact.resume} target="_blank" rel="noreferrer"
+                               className="px-8 py-3 font-orbitron font-bold clip-corner text-sm md:text-base transition-all"
+                               style={{ backgroundColor: 'transparent', color: '#E0E0E0', border: '1px solid rgba(224,224,224,0.3)' }}
+                               onMouseEnter={e => { e.currentTarget.style.borderColor = '#00F0FF'; e.currentTarget.style.color = '#00F0FF'; }}
+                               onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(224,224,224,0.3)'; e.currentTarget.style.color = '#E0E0E0'; }}>
+                                {content.static.resume}
+                            </a>
+                        </div>
+                    </div>
+                    <div className="flex justify-center relative mt-8 md:mt-0">
+                        <div className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-full overflow-hidden"
+                             style={{ border: '4px solid rgba(0,240,255,0.5)', boxShadow: '0 0 40px rgba(0,240,255,0.3)' }}>
+                            <img src="https://media.licdn.com/dms/image/v2/D4E03AQFBrxhNazYfEg/profile-displayphoto-crop_800_800/B4EZwb1YszKoAI-/0/1769993505887?e=1774483200&v=beta&t=OUWDms2Dr432UOKSTX3QhV6TWxYFUE1GSkN8kBiVavs"
+                                 className="w-full h-full object-cover" alt="Profile" />
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div className="flex justify-center relative mt-8 md:mt-0">
-                <div className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-[#00F0FF]/50 shadow-[0_0_40px_rgba(0,240,255,0.3)]">
-                    <img src="https://media.licdn.com/dms/image/v2/D4E03AQFBrxhNazYfEg/profile-displayphoto-crop_800_800/B4EZwb1YszKoAI-/0/1769993505887?e=1774483200&v=beta&t=OUWDms2Dr432UOKSTX3QhV6TWxYFUE1GSkN8kBiVavs" className="w-full h-full object-cover" alt="Profile" />
+            </section>
+        );
+
+        const HypedAlien = ({ messages }) => {
+            const [msgIndex, setMsgIndex] = useState(0);
+            const [showMsg, setShowMsg] = useState(false);
+
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setShowMsg(true);
+                    setTimeout(() => setShowMsg(false), 4000);
+                    setTimeout(() => {
+                        setMsgIndex(prev => (prev + 1) % messages.length);
+                    }, 4500);
+                }, 10000);
+                return () => clearInterval(interval);
+            }, [messages]);
+
+            return (
+                <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end animate-float">
+                    <div className="mb-2 mr-2 p-3 font-mono-custom text-xs font-bold clip-talk-bubble transition-opacity duration-300"
+                         style={{ backgroundColor: '#00F0FF', color: '#000', maxWidth: '180px', opacity: showMsg ? 1 : 0 }}>
+                        {messages[msgIndex]}
+                    </div>
+                    <div className="w-16 h-16 hover:scale-110 transition-transform cursor-pointer"
+                         style={{ color: '#00F0FF' }}
+                         onClick={() => { setShowMsg(true); setMsgIndex((msgIndex + 1) % messages.length); }}>
+                        <svg viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M6 2h8v2H6V2z M4 4h2v2H4V4z M14 4h2v2h-2V4z M2 6h2v2H2V6z M16 6h2v2h-2V6z M2 8h2v2h2v2h8v-2h2V8h2v4h-2v2h-2v2h-2v-2h-2v2H8v-2H6v-2H4v-2H2V8z M6 8h2v2H6V8z M12 8h2v2h-2V8z" />
+                        </svg>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </section>
-);
+            );
+        };
 
-const HypedAlien = ({ messages }) => {
-    const [msgIndex, setMsgIndex] = useState(0);
-    const [showMsg, setShowMsg] = useState(false);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setShowMsg(true);
-            setTimeout(() => setShowMsg(false), 4000); 
-            setTimeout(() => {
-                setMsgIndex(prev => (prev + 1) % messages.length);
-            }, 4500); 
-        }, 10000);
-
-        return () => clearInterval(interval);
-    }, [messages]);
-
-    return (
-        <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end animate-float">
-            <div className={`mb-2 mr-2 bg-[#00F0FF] text-black p-3 font-mono text-xs font-bold clip-talk-bubble transition-opacity duration-300 ${showMsg ? 'opacity-100' : 'opacity-0'}`} style={{maxWidth: '180px'}}>
-                {messages[msgIndex]}
-            </div>
-            <div className="w-16 h-16 text-[#00F0FF] hover:scale-110 transition-transform cursor-pointer" onClick={() => { setShowMsg(true); setMsgIndex((msgIndex + 1) % messages.length); }}>
-               <svg viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M6 2h8v2H6V2z M4 4h2v2H4V4z M14 4h2v2h-2V4z M2 6h2v2H2V6z M16 6h2v2h-2V6z M2 8h2v2h2v2h8v-2h2V8h2v4h-2v2h-2v2h-2v-2h-2v2H8v-2H6v-2H4v-2H2V8z M6 8h2v2H6V8z M12 8h2v2h-2V8z" />
-               </svg>
-            </div>
-        </div>
-    );
-};
-
-const PaginationControls = ({ currentPage, totalPages, onPageChange, labels }) => {
-    if (totalPages <= 1) return null;
-    return (
-        <div className="flex justify-center gap-4 mt-8">
-            <button 
-                onClick={() => onPageChange(Math.max(0, currentPage - 1))}
-                disabled={currentPage === 0}
-                className={`px-4 py-2 border border-[#00F0FF]/30 font-mono text-xs font-bold ${currentPage === 0 ? 'opacity-30 cursor-not-allowed text-[#E0E0E0]' : 'text-[#00F0FF] hover:bg-[#00F0FF]/10'}`}
-            >
-                &lt; {labels.prev}
-            </button>
-            <div className="flex items-center gap-2">
-                {[...Array(totalPages)].map((_, i) => (
+        const PaginationControls = ({ currentPage, totalPages, onPageChange, labels }) => {
+            if (totalPages <= 1) return null;
+            return (
+                <div className="flex justify-center gap-4 mt-8">
                     <button
-                        key={i}
-                        onClick={() => onPageChange(i)}
-                        className={`w-2 h-2 rounded-full ${i === currentPage ? 'bg-[#00F0FF]' : 'bg-[#00F0FF]/30 hover:bg-[#00F0FF]/60'}`}
-                    />
-                ))}
-            </div>
-            <button 
-                onClick={() => onPageChange(Math.min(totalPages - 1, currentPage + 1))}
-                disabled={currentPage === totalPages - 1}
-                className={`px-4 py-2 border border-[#00F0FF]/30 font-mono text-xs font-bold ${currentPage === totalPages - 1 ? 'opacity-30 cursor-not-allowed text-[#E0E0E0]' : 'text-[#00F0FF] hover:bg-[#00F0FF]/10'}`}
-            >
-                {labels.next} &gt;
-            </button>
-        </div>
-    );
-};
-
-const Experience = ({ content }) => {
-    const [page, setPage] = useState(0);
-    const ITEMS_PER_PAGE = 4;
-    const totalPages = Math.ceil(content.experience.length / ITEMS_PER_PAGE);
-    const displayedItems = content.experience.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
-
-    return (
-        <section id="experience" className="py-24 relative bg-[#0B0E14]">
-            <div className="max-w-6xl mx-auto px-6">
-                <div className="mb-16">
-                    <h2 className="text-3xl font-orbitron font-bold text-white uppercase tracking-widest">{content.static.systemLog}</h2>
-                    <p className="text-[#00F0FF] font-rajdhani uppercase tracking-widest">{content.static.profExp}</p>
+                        onClick={() => onPageChange(Math.max(0, currentPage - 1))}
+                        disabled={currentPage === 0}
+                        className="px-4 py-2 font-mono-custom text-xs font-bold"
+                        style={{
+                            border: '1px solid rgba(0,240,255,0.3)',
+                            color: currentPage === 0 ? '#E0E0E0' : '#00F0FF',
+                            opacity: currentPage === 0 ? 0.3 : 1,
+                            cursor: currentPage === 0 ? 'not-allowed' : 'pointer',
+                            background: 'transparent'
+                        }}
+                    >
+                        &lt; {labels.prev}
+                    </button>
+                    <div className="flex items-center gap-2">
+                        {[...Array(totalPages)].map((_, i) => (
+                            <button key={i} onClick={() => onPageChange(i)}
+                                    className="w-2 h-2 rounded-full"
+                                    style={{ backgroundColor: i === currentPage ? '#00F0FF' : 'rgba(0,240,255,0.3)' }} />
+                        ))}
+                    </div>
+                    <button
+                        onClick={() => onPageChange(Math.min(totalPages - 1, currentPage + 1))}
+                        disabled={currentPage === totalPages - 1}
+                        className="px-4 py-2 font-mono-custom text-xs font-bold"
+                        style={{
+                            border: '1px solid rgba(0,240,255,0.3)',
+                            color: currentPage === totalPages - 1 ? '#E0E0E0' : '#00F0FF',
+                            opacity: currentPage === totalPages - 1 ? 0.3 : 1,
+                            cursor: currentPage === totalPages - 1 ? 'not-allowed' : 'pointer',
+                            background: 'transparent'
+                        }}
+                    >
+                        {labels.next} &gt;
+                    </button>
                 </div>
-                <div className="grid md:grid-cols-12 gap-12">
-                    <div className="md:col-span-8">
-                        <div className="space-y-8 border-l border-[#00F0FF]/20 pl-6">
-                            {displayedItems.map((job, i) => (
-                                <div key={i} className="bg-[#0F141E] p-6 border border-[#00F0FF]/10 hover:border-[#00F0FF]/50 transition-all clip-corner-sm">
-                                    <div className="flex justify-between items-start mb-2 flex-wrap gap-2">
-                                        <h4 className="text-lg font-bold font-orbitron">{job.role}</h4>
-                                        <span className="text-[#00F0FF] font-mono text-xs bg-[#00F0FF]/5 px-2 py-1 rounded">{job.date}</span>
+            );
+        };
+
+        const Experience = ({ content }) => {
+            const [page, setPage] = useState(0);
+            const ITEMS_PER_PAGE = 4;
+            const totalPages = Math.ceil(content.experience.length / ITEMS_PER_PAGE);
+            const displayedItems = content.experience.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
+
+            return (
+                <section id="experience" className="py-24 relative" style={{ backgroundColor: '#0B0E14' }}>
+                    <div className="max-w-6xl mx-auto px-6">
+                        <div className="mb-16">
+                            <h2 className="text-3xl font-orbitron font-bold text-white uppercase tracking-widest">{content.static.systemLog}</h2>
+                            <p className="font-rajdhani uppercase tracking-widest" style={{ color: '#00F0FF' }}>{content.static.profExp}</p>
+                        </div>
+                        <div className="grid md:grid-cols-12 gap-12">
+                            <div className="md:col-span-8">
+                                <div className="space-y-8 pl-6" style={{ borderLeft: '1px solid rgba(0,240,255,0.2)' }}>
+                                    {displayedItems.map((job, i) => (
+                                        <div key={i} className="p-6 clip-corner-sm transition-all"
+                                             style={{ backgroundColor: '#0F141E', border: '1px solid rgba(0,240,255,0.1)' }}
+                                             onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(0,240,255,0.5)'}
+                                             onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(0,240,255,0.1)'}>
+                                            <div className="flex justify-between items-start mb-2 flex-wrap gap-2">
+                                                <h4 className="text-lg font-bold font-orbitron text-white">{job.role}</h4>
+                                                <span className="font-mono-custom text-xs px-2 py-1 rounded"
+                                                      style={{ color: '#00F0FF', backgroundColor: 'rgba(0,240,255,0.05)' }}>{job.date}</span>
+                                            </div>
+                                            <p className="font-rajdhani uppercase text-sm mb-4 font-semibold"
+                                               style={{ color: 'rgba(0,240,255,0.7)' }}>{job.org}</p>
+                                            <p className="text-sm leading-relaxed mb-4 whitespace-pre-line"
+                                               style={{ color: 'rgba(224,224,224,0.8)' }}>{job.desc}</p>
+                                            <div className="flex flex-wrap gap-2 pt-4" style={{ borderTop: '1px solid rgba(0,240,255,0.1)' }}>
+                                                {job.skills.map(skill => (
+                                                    <span key={skill} className="text-xs px-2 py-1 font-mono-custom"
+                                                          style={{ backgroundColor: 'rgba(0,240,255,0.05)', color: 'rgba(0,240,255,0.7)', border: '1px solid rgba(0,240,255,0.2)' }}>
+                                                        {skill}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <PaginationControls currentPage={page} totalPages={totalPages} onPageChange={setPage}
+                                    labels={{ prev: content.static.prev, next: content.static.next }} />
+                            </div>
+                            <div className="md:col-span-4 space-y-8">
+                                <div className="p-6 clip-corner-sm" style={{ backgroundColor: '#0F141E', border: '1px solid rgba(0,240,255,0.1)' }}>
+                                    <h4 className="font-orbitron font-bold mb-4 flex items-center gap-2 uppercase tracking-tighter" style={{ color: '#00F0FF' }}>
+                                        <LucideIcon name="file-text" className="w-5 h-5" /> {content.static.education}
+                                    </h4>
+                                    <div className="mb-4">
+                                        <p className="font-bold text-white">Florida State University</p>
+                                        <p className="text-sm" style={{ color: 'rgba(224,224,224,0.6)' }}>{content.static.degree}</p>
+                                        <div className="mt-2 text-xs font-mono-custom space-y-1">
+                                            <p style={{ color: '#00F0FF' }}>{content.static.gpa}</p>
+                                            <p style={{ color: 'rgba(224,224,224,0.4)' }}>{content.static.minors}</p>
+                                        </div>
                                     </div>
-                                    <p className="text-[#00F0FF]/70 font-rajdhani uppercase text-sm mb-4 font-semibold">{job.org}</p>
-                                    <p className="text-sm leading-relaxed text-[#E0E0E0]/80 mb-4 whitespace-pre-line">{job.desc}</p>
-                                    <div className="flex flex-wrap gap-2 pt-4 border-t border-[#00F0FF]/10">
-                                        {job.skills.map(skill => (
-                                            <span key={skill} className="text-[10px] px-2 py-1 bg-[#00F0FF]/5 text-[#00F0FF]/70 font-mono border border-[#00F0FF]/20">{skill}</span>
+                                    <div className="pt-4" style={{ borderTop: '1px solid rgba(0,240,255,0.1)' }}>
+                                        <p className="text-xs font-mono-custom mb-2 uppercase tracking-wider" style={{ color: 'rgba(224,224,224,0.4)' }}>{content.static.leadership}</p>
+                                        <div className="space-y-3">
+                                            <div>
+                                                <p className="text-sm font-bold text-white">Seminole Innovators</p>
+                                                <p className="text-xs" style={{ color: '#00F0FF' }}>{content.static.si_role}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-sm font-bold text-white">Environmental Service Program</p>
+                                                <p className="text-xs" style={{ color: '#00F0FF' }}>{content.static.esp_role}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="p-6 clip-corner-sm" style={{ backgroundColor: '#0F141E', border: '1px solid rgba(0,240,255,0.1)' }}>
+                                    <h4 className="font-orbitron font-bold mb-4 flex items-center gap-2 uppercase tracking-tighter" style={{ color: '#00F0FF' }}>
+                                        <LucideIcon name="award" className="w-5 h-5" /> {content.static.credentials}
+                                    </h4>
+                                    <div className="space-y-4">
+                                        {[
+                                            { href: "https://www.coursera.org/account/accomplishments/specialization/ZMEQM8KPSQTD", title: "Google AI Essentials Specialization", sub: "Google • Dec 2025" },
+                                            { href: "https://www.coursera.org/account/accomplishments/verify/2EGIVRVF9BJ8", title: "Excel Skills for Business", sub: "Macquarie University • Dec 2025" },
+                                            { href: "https://www.coursera.org/account/accomplishments/specialization/JHQWIY2YZ5RO", title: "Data-Driven Decision Making", sub: "Google • Dec 2025" }
+                                        ].map((cred, i) => (
+                                            <React.Fragment key={i}>
+                                                {i > 0 && <div className="h-px w-full" style={{ backgroundColor: 'rgba(0,240,255,0.1)' }}></div>}
+                                                <a href={cred.href} target="_blank" rel="noreferrer" className="block">
+                                                    <p className="text-sm font-bold text-white flex items-start gap-2 transition-colors"
+                                                       onMouseEnter={e => e.currentTarget.style.color = '#00F0FF'}
+                                                       onMouseLeave={e => e.currentTarget.style.color = 'white'}>
+                                                        {cred.title} <LucideIcon name="external-link" className="w-3 h-3 mt-1 opacity-50" />
+                                                    </p>
+                                                    <p className="text-xs mt-1" style={{ color: 'rgba(224,224,224,0.6)' }}>{cred.sub}</p>
+                                                </a>
+                                            </React.Fragment>
                                         ))}
                                     </div>
                                 </div>
-                            ))}
-                        </div>
-                        <PaginationControls 
-                            currentPage={page} 
-                            totalPages={totalPages} 
-                            onPageChange={setPage}
-                            labels={{ prev: content.static.prev, next: content.static.next }}
-                        />
-                    </div>
-                    <div className="md:col-span-4 space-y-8">
-                        <div className="bg-[#0F141E] p-6 border border-[#00F0FF]/10 clip-corner-sm">
-                            <h4 className="font-orbitron font-bold mb-4 text-[#00F0FF] flex items-center gap-2 uppercase tracking-tighter">
-                                <Icon name="file-text" className="w-[18px] h-[18px]" /> {content.static.education}
-                            </h4>
-                            <div className="mb-4">
-                                <p className="font-bold text-white">Florida State University</p>
-                                <p className="text-sm text-[#E0E0E0]/60">{content.static.degree}</p>
-                                <div className="mt-2 text-xs font-mono space-y-1">
-                                    <p className="text-[#00F0FF]">{content.static.gpa}</p>
-                                    <p className="text-[#E0E0E0]/40">{content.static.minors}</p>
-                                </div>
-                            </div>
-                            <div className="pt-4 border-t border-[#00F0FF]/10">
-                                <p className="text-[10px] text-[#E0E0E0]/40 font-mono mb-2 uppercase tracking-wider">{content.static.leadership}</p>
+
                                 <div className="space-y-3">
-                                    <div>
-                                        <p className="text-sm font-bold text-white">Seminole Innovators</p>
-                                        <p className="text-xs text-[#00F0FF]">{content.static.si_role}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-bold text-white">Environmental Service Program</p>
-                                        <p className="text-xs text-[#00F0FF]">{content.static.esp_role}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-[#0F141E] p-6 border border-[#00F0FF]/10 clip-corner-sm">
-                            <h4 className="font-orbitron font-bold mb-4 text-[#00F0FF] flex items-center gap-2 uppercase tracking-tighter">
-                                <Icon name="award" className="w-[18px] h-[18px]" /> {content.static.credentials}
-                            </h4>
-                            <div className="space-y-4">
-                                <a href="https://www.coursera.org/account/accomplishments/specialization/ZMEQM8KPSQTD" target="_blank" rel="noreferrer" className="block group">
-                                    <p className="text-sm font-bold text-white group-hover:text-[#00F0FF] transition-colors flex items-start gap-2">
-                                        Google AI Essentials Specialization <Icon name="external-link" className="w-3 h-3 mt-1 opacity-50" />
-                                    </p>
-                                    <p className="text-xs text-[#E0E0E0]/60 mt-1">Google • Dec 2025</p>
-                                </a>
-                                <div className="h-[1px] w-full bg-[#00F0FF]/10"></div>
-                                <a href="https://www.coursera.org/account/accomplishments/verify/2EGIVRVF9BJ8" target="_blank" rel="noreferrer" className="block group">
-                                    <p className="text-sm font-bold text-white group-hover:text-[#00F0FF] transition-colors flex items-start gap-2">
-                                        Excel Skills for Business <Icon name="external-link" className="w-3 h-3 mt-1 opacity-50" />
-                                    </p>
-                                    <p className="text-xs text-[#E0E0E0]/60 mt-1">Macquarie University • Dec 2025</p>
-                                </a>
-                                <div className="h-[1px] w-full bg-[#00F0FF]/10"></div>
-                                <a href="https://www.coursera.org/account/accomplishments/specialization/JHQWIY2YZ5RO" target="_blank" rel="noreferrer" className="block group">
-                                    <p className="text-sm font-bold text-white group-hover:text-[#00F0FF] transition-colors flex items-start gap-2">
-                                        Data-Driven Decision Making <Icon name="external-link" className="w-3 h-3 mt-1 opacity-50" />
-                                    </p>
-                                    <p className="text-xs text-[#E0E0E0]/60 mt-1">Google • Dec 2025</p>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div className="space-y-3">
-                            {content.skills.map((skill, i) => (
-                                <div key={i} className="flex justify-between items-center p-3 bg-[#0F141E] border-l-2 border-[#00F0FF]/30 text-sm hover:bg-[#00F0FF]/5 transition-colors group">
-                                    <span className="font-bold flex items-center gap-2">
-                                        <Icon name={skill.icon} className="w-[14px] h-[14px] text-[#00F0FF] opacity-40 group-hover:opacity-100 transition-opacity" />
-                                        {skill.name}
-                                    </span>
-                                    <span className="text-[10px] opacity-40 font-mono uppercase">{skill.type}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    );
-};
-
-const Projects = ({ content }) => {
-    const [page, setPage] = useState(0);
-    const ITEMS_PER_PAGE = 6;
-    const totalPages = Math.ceil(content.projects.length / ITEMS_PER_PAGE);
-    const displayedItems = content.projects.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
-
-    return (
-        <section id="projects" className="py-24 border-t border-[#00F0FF]/10">
-            <div className="max-w-7xl mx-auto px-6">
-                <h2 className="text-3xl font-orbitron font-bold text-white uppercase tracking-widest mb-12 flex items-center gap-3">
-                    {content.static.projectDb}
-                </h2>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {displayedItems.map(proj => (
-                        <div key={proj.id} className="bg-[#0F141E] border border-[#00F0FF]/20 flex flex-col group overflow-hidden hover:border-[#00F0FF]/60 transition-all hover:-translate-y-1">
-                            <div className="bg-[#00F0FF]/10 p-3 border-b border-[#00F0FF]/20 flex justify-between items-center font-mono text-[10px]">
-                                <span className="text-[#00F0FF]/60">{content.static.idPrefix}{proj.id.toString().padStart(3, '0')}</span>
-                                <span className={proj.status === 'Completed' ? 'text-[#00F0FF] font-bold' : 'text-yellow-400 font-bold'}>
-                                    {proj.status.toUpperCase()}
-                                </span>
-                            </div>
-                            <div className="p-6 flex-grow flex flex-col">
-                                <h3 className="font-orbitron font-bold text-white mb-2 uppercase text-lg group-hover:text-[#00F0FF] transition-colors">{proj.title}</h3>
-                                <div className="text-[10px] font-mono text-[#E0E0E0]/40 mb-3">{proj.year}</div>
-                                <div className="flex flex-wrap gap-2 mb-4">
-                                    {proj.stack.map(s => (
-                                        <span key={s} className="px-1.5 py-0.5 bg-[#0B0E14] text-[10px] font-mono border border-[#00F0FF]/20 text-[#00F0FF]/80">{s}</span>
+                                    {content.skills.map((skill, i) => (
+                                        <div key={i} className="flex justify-between items-center p-3 text-sm transition-colors"
+                                             style={{ backgroundColor: '#0F141E', borderLeft: '2px solid rgba(0,240,255,0.3)' }}
+                                             onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(0,240,255,0.05)'}
+                                             onMouseLeave={e => e.currentTarget.style.backgroundColor = '#0F141E'}>
+                                            <span className="font-bold text-white flex items-center gap-2">
+                                                <LucideIcon name={skill.icon} className="w-4 h-4" style={{ color: '#00F0FF', opacity: 0.4 }} />
+                                                {skill.name}
+                                            </span>
+                                            <span className="text-xs font-mono-custom uppercase" style={{ opacity: 0.4 }}>{skill.type}</span>
+                                        </div>
                                     ))}
                                 </div>
-                                <p className="text-sm opacity-70 mb-6 leading-relaxed flex-grow">{proj.desc}</p>
-                                {proj.link && (
-                                    <a href={proj.link} target="_blank" rel="noreferrer" className="text-[#00F0FF] font-bold text-xs font-orbitron uppercase tracking-widest flex items-center gap-1 group/link">
-                                        {content.static.initiate} 
-                                        <Icon name="external-link" className="w-3 h-3 group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform" />
-                                    </a>
-                                )}
                             </div>
                         </div>
-                    ))}
-                </div>
-                <PaginationControls 
-                    currentPage={page} 
-                    totalPages={totalPages} 
-                    onPageChange={setPage}
-                    labels={{ prev: content.static.prev, next: content.static.next }}
-                />
-            </div>
-        </section>
-    );
-};
+                    </div>
+                </section>
+            );
+        };
 
-const Awards = ({ content }) => {
-    const [page, setPage] = useState(0);
-    const ITEMS_PER_PAGE = 3;
-    const totalPages = Math.ceil(content.awards.length / ITEMS_PER_PAGE);
-    const displayedItems = content.awards.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
+        const Projects = ({ content }) => {
+            const [page, setPage] = useState(0);
+            const ITEMS_PER_PAGE = 6;
+            const totalPages = Math.ceil(content.projects.length / ITEMS_PER_PAGE);
+            const displayedItems = content.projects.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
 
-    return (
-        <section id="awards" className="py-24 relative bg-[#0B0E14] border-t border-[#00F0FF]/10">
-            <div className="max-w-6xl mx-auto px-6">
-                <div className="mb-16">
-                    <h2 className="text-3xl font-orbitron font-bold text-white uppercase tracking-widest">{content.static.commendations}</h2>
-                    <p className="text-[#00F0FF] font-rajdhani uppercase tracking-widest">{content.static.honors}</p>
-                </div>
-                <div className="grid md:grid-cols-3 gap-6">
-                    {displayedItems.map((award, i) => (
-                        <div key={i} className="bg-[#0F141E] p-6 border border-[#00F0FF]/20 flex flex-col items-center text-center hover:border-[#00F0FF]/60 transition-all group relative overflow-hidden clip-corner">
-                            <div className="absolute inset-0 bg-[#00F0FF]/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
-                            <div className="relative z-10">
-                                <div className="w-12 h-12 rounded-full bg-[#00F0FF]/10 flex items-center justify-center mb-4 mx-auto border border-[#00F0FF]/30 group-hover:scale-110 transition-transform">
-                                    <Icon name={award.icon} className="text-[#00F0FF] w-6 h-6" />
+            return (
+                <section id="projects" className="py-24" style={{ borderTop: '1px solid rgba(0,240,255,0.1)' }}>
+                    <div className="max-w-7xl mx-auto px-6">
+                        <h2 className="text-3xl font-orbitron font-bold text-white uppercase tracking-widest mb-12 flex items-center gap-3">
+                            {content.static.projectDb}
+                        </h2>
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {displayedItems.map(proj => (
+                                <div key={proj.id} className="flex flex-col overflow-hidden transition-all"
+                                     style={{ backgroundColor: '#0F141E', border: '1px solid rgba(0,240,255,0.2)' }}
+                                     onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(0,240,255,0.6)'; e.currentTarget.style.transform = 'translateY(-4px)'; }}
+                                     onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,240,255,0.2)'; e.currentTarget.style.transform = 'none'; }}>
+                                    <div className="p-3 flex justify-between items-center font-mono-custom"
+                                         style={{ backgroundColor: 'rgba(0,240,255,0.1)', borderBottom: '1px solid rgba(0,240,255,0.2)', fontSize: '10px' }}>
+                                        <span style={{ color: 'rgba(0,240,255,0.6)' }}>{content.static.idPrefix}{proj.id.toString().padStart(3, '0')}</span>
+                                        <span style={{ color: proj.status === 'Completed' ? '#00F0FF' : '#facc15', fontWeight: 'bold' }}>
+                                            {proj.status.toUpperCase()}
+                                        </span>
+                                    </div>
+                                    <div className="p-6 flex-grow flex flex-col">
+                                        <h3 className="font-orbitron font-bold text-white mb-2 uppercase text-lg transition-colors">{proj.title}</h3>
+                                        <div className="font-mono-custom mb-3" style={{ fontSize: '10px', color: 'rgba(224,224,224,0.4)' }}>{proj.year}</div>
+                                        <div className="flex flex-wrap gap-2 mb-4">
+                                            {proj.stack.map(s => (
+                                                <span key={s} className="px-1.5 py-0.5 font-mono-custom"
+                                                      style={{ fontSize: '10px', backgroundColor: '#0B0E14', border: '1px solid rgba(0,240,255,0.2)', color: 'rgba(0,240,255,0.8)' }}>
+                                                    {s}
+                                                </span>
+                                            ))}
+                                        </div>
+                                        <p className="text-sm mb-6 leading-relaxed flex-grow" style={{ opacity: 0.7 }}>{proj.desc}</p>
+                                        {proj.link && (
+                                            <a href={proj.link} target="_blank" rel="noreferrer"
+                                               className="font-bold text-xs font-orbitron uppercase tracking-widest flex items-center gap-1"
+                                               style={{ color: '#00F0FF' }}>
+                                                {content.static.initiate}
+                                                <LucideIcon name="external-link" className="w-3 h-3" />
+                                            </a>
+                                        )}
+                                    </div>
                                 </div>
-                                <h3 className="font-orbitron font-bold text-white text-lg mb-2">{award.title}</h3>
-                                <p className="text-[#00F0FF]/70 font-mono text-xs uppercase mb-1">{award.issuer}</p>
-                                <p className="text-[#E0E0E0]/50 font-rajdhani text-sm">{award.year}</p>
+                            ))}
+                        </div>
+                        <PaginationControls currentPage={page} totalPages={totalPages} onPageChange={setPage}
+                            labels={{ prev: content.static.prev, next: content.static.next }} />
+                    </div>
+                </section>
+            );
+        };
+
+        const Awards = ({ content }) => {
+            const [page, setPage] = useState(0);
+            const ITEMS_PER_PAGE = 3;
+            const totalPages = Math.ceil(content.awards.length / ITEMS_PER_PAGE);
+            const displayedItems = content.awards.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
+
+            return (
+                <section id="awards" className="py-24 relative" style={{ backgroundColor: '#0B0E14', borderTop: '1px solid rgba(0,240,255,0.1)' }}>
+                    <div className="max-w-6xl mx-auto px-6">
+                        <div className="mb-16">
+                            <h2 className="text-3xl font-orbitron font-bold text-white uppercase tracking-widest">{content.static.commendations}</h2>
+                            <p className="font-rajdhani uppercase tracking-widest" style={{ color: '#00F0FF' }}>{content.static.honors}</p>
+                        </div>
+                        <div className="grid md:grid-cols-3 gap-6">
+                            {displayedItems.map((award, i) => (
+                                <div key={i} className="p-6 flex flex-col items-center text-center transition-all clip-corner relative overflow-hidden"
+                                     style={{ backgroundColor: '#0F141E', border: '1px solid rgba(0,240,255,0.2)' }}
+                                     onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(0,240,255,0.6)'}
+                                     onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(0,240,255,0.2)'}>
+                                    <div className="relative z-10">
+                                        <div className="w-12 h-12 rounded-full flex items-center justify-center mb-4 mx-auto"
+                                             style={{ backgroundColor: 'rgba(0,240,255,0.1)', border: '1px solid rgba(0,240,255,0.3)' }}>
+                                            <LucideIcon name={award.icon} className="w-6 h-6" style={{ color: '#00F0FF' }} />
+                                        </div>
+                                        <h3 className="font-orbitron font-bold text-white text-lg mb-2">{award.title}</h3>
+                                        <p className="font-mono-custom text-xs uppercase mb-1" style={{ color: 'rgba(0,240,255,0.7)' }}>{award.issuer}</p>
+                                        <p className="font-rajdhani text-sm" style={{ color: 'rgba(224,224,224,0.5)' }}>{award.year}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <PaginationControls currentPage={page} totalPages={totalPages} onPageChange={setPage}
+                            labels={{ prev: content.static.prev, next: content.static.next }} />
+                    </div>
+                </section>
+            );
+        };
+
+        const Contact = ({ content }) => (
+            <section id="comms" className="py-24 relative overflow-hidden" style={{ backgroundColor: '#080a0f' }}>
+                <div className="absolute top-0 left-0 w-full h-px"
+                     style={{ background: 'linear-gradient(to right, transparent, rgba(0,240,255,0.3), transparent)' }}></div>
+                <div className="max-w-4xl mx-auto px-6 text-center">
+                    <h2 className="text-3xl font-orbitron font-bold text-white uppercase tracking-widest mb-4">{content.static.commsArray}</h2>
+                    <p className="font-rajdhani mb-12 uppercase tracking-widest" style={{ color: '#00F0FF' }}>{content.static.transmission}</p>
+                    <div className="flex flex-col items-center justify-center space-y-6">
+                        <div className="p-8 max-w-2xl w-full text-center clip-corner"
+                             style={{ border: '1px solid rgba(0,240,255,0.1)', backgroundColor: 'rgba(15,20,30,0.5)' }}>
+                            <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 font-mono-custom text-sm md:text-base">
+                                <span className="transition-colors cursor-text"
+                                      style={{ color: '#E0E0E0' }}
+                                      onMouseEnter={e => e.target.style.color = '#00F0FF'}
+                                      onMouseLeave={e => e.target.style.color = '#E0E0E0'}>
+                                    {content.system.contact.email}
+                                </span>
+                                <span className="hidden md:inline" style={{ color: 'rgba(0,240,255,0.3)' }}>|</span>
+                                <a href={content.system.contact.linkedin} target="_blank" rel="noreferrer"
+                                   className="flex items-center gap-2 transition-colors"
+                                   style={{ color: '#00F0FF' }}
+                                   onMouseEnter={e => e.currentTarget.style.color = 'white'}
+                                   onMouseLeave={e => e.currentTarget.style.color = '#00F0FF'}>
+                                    {content.static.linkedinLabel} <LucideIcon name="external-link" className="w-4 h-4" />
+                                </a>
                             </div>
                         </div>
-                    ))}
-                </div>
-                <PaginationControls 
-                    currentPage={page} 
-                    totalPages={totalPages} 
-                    onPageChange={setPage}
-                    labels={{ prev: content.static.prev, next: content.static.next }}
-                />
-            </div>
-        </section>
-    );
-};
-
-const Contact = ({ content }) => (
-    <section id="comms" className="py-24 bg-[#080a0f] relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#00F0FF]/30 to-transparent"></div>
-        <div className="max-w-4xl mx-auto px-6 text-center">
-            <h2 className="text-3xl font-orbitron font-bold text-white uppercase tracking-widest mb-4">{content.static.commsArray}</h2>
-            <p className="font-rajdhani text-[#00F0FF] mb-12 uppercase tracking-widest">{content.static.transmission}</p>
-            <div className="flex flex-col items-center justify-center space-y-6">
-                <div className="p-8 border border-[#00F0FF]/10 bg-[#0F141E]/50 backdrop-blur-sm max-w-2xl w-full text-center clip-corner">
-                    <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 font-mono text-sm md:text-base">
-                        <span className="text-[#E0E0E0] selection:bg-[#00F0FF] selection:text-black hover:text-[#00F0FF] transition-colors cursor-text">
-                            {content.system.contact.email}
-                        </span>
-                        <span className="hidden md:inline text-[#00F0FF]/30">|</span>
-                        <a 
-                            href={content.system.contact.linkedin} 
-                            target="_blank" 
-                            rel="noreferrer"
-                            className="text-[#00F0FF] hover:text-white transition-colors flex items-center gap-2"
-                        >
-                            {content.static.linkedinLabel} <Icon name="external-link" className="w-[14px] h-[14px]" />
-                        </a>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
-);
+            </section>
+        );
 
-const Footer = () => (
-    <footer className="py-12 text-center opacity-40 font-mono text-[10px] border-t border-[#00F0FF]/10 tracking-[0.2em]">
-        &copy; {new Date().getFullYear()} JUAN S. GUTIERREZ | SYSTEM_CORE_V2.5.0
-    </footer>
-);
+        const Footer = () => (
+            <footer className="py-12 text-center font-mono-custom tracking-widest"
+                    style={{ opacity: 0.4, fontSize: '10px', borderTop: '1px solid rgba(0,240,255,0.1)', letterSpacing: '0.2em' }}>
+                &copy; {new Date().getFullYear()} JUAN S. GUTIERREZ | SYSTEM_CORE_V2.5.0
+            </footer>
+        );
 
-/* --- MAIN APP MODULE --- */
-export default function App() {
-    const [scrolled, setScrolled] = useState(false);
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+        /* --- MAIN APP --- */
+        function App() {
+            const [scrolled, setScrolled] = useState(false);
+            const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-    useEffect(() => {
-        const handleScroll = () => setScrolled(window.scrollY > 50);
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+            useEffect(() => {
+                const handleScroll = () => setScrolled(window.scrollY > 50);
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
 
-    const toggleMobileMenu = () => {
-        setMobileMenuOpen(!mobileMenuOpen);
-    };
+            return (
+                <div className="min-h-screen font-sans-custom" style={{ backgroundColor: '#0B0E14', color: '#E0E0E0' }}>
+                    <Nav
+                        content={DATA}
+                        mobileMenuOpen={mobileMenuOpen}
+                        toggleMobileMenu={() => setMobileMenuOpen(!mobileMenuOpen)}
+                        closeMobileMenu={() => setMobileMenuOpen(false)}
+                        scrolled={scrolled}
+                    />
+                    <Hero content={DATA} />
+                    <Experience content={DATA} />
+                    <Projects content={DATA} />
+                    <Awards content={DATA} />
+                    <Contact content={DATA} />
+                    <HypedAlien messages={DATA.hype} />
+                    <Footer />
+                </div>
+            );
+        }
 
-    const closeMobileMenu = () => {
-        setMobileMenuOpen(false);
-    };
-
-    return (
-        <div className="min-h-screen bg-[#0B0E14] text-[#E0E0E0] font-sans selection:bg-[#00F0FF] selection:text-black">
-            <style>{styles}</style>
-            <Nav 
-                content={DATA} 
-                mobileMenuOpen={mobileMenuOpen} 
-                toggleMobileMenu={toggleMobileMenu} 
-                closeMobileMenu={closeMobileMenu} 
-                scrolled={scrolled} 
-            />
-            <Hero content={DATA} />
-            <Experience content={DATA} />
-            <Projects content={DATA} />
-            <Awards content={DATA} />
-            <Contact content={DATA} />
-            <HypedAlien messages={DATA.hype} />
-            <Footer />
-        </div>
-    );
-}
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
